@@ -17,4 +17,8 @@ router.route('/nav').get(function(req, res) {
     res.sendFile(path.join(__dirname, '../', '/frontend/nav.html'));
 });
 
+router.route('/moderate').get(function(req, res) {
+    res.sendFile(path.join(__dirname, '../', '/frontend/moderator-form.html'));
+});
+
 module.exports = router;
