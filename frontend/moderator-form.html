@@ -12,7 +12,48 @@
 </head>
 <body>
     <nav></nav>
-    <h1>Moderate Article</h1>
-    <p>This is a placeholder moderator form</p>
+    <h1>Moderate Articles</h1>
+    <table id="queue">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Accept/decline</th>
+            <th>Reason if declined</th>
+        </tr>
+    </table>
+
+    <script>
+        $(function(){
+            $.get("/api/v1/article", function(data, status){
+                data['data']['article'].forEach(element => {
+                    $("#queue").append(
+                        //TODO: Implement api call to get status and DOI
+                        "<tr>"
+                        +"<td>"+element['title']+"</td>"
+                        +"<td>"+element['author']+"</td>"
+                        +"<td>"+element['year']+"</td>"
+                        +"<td>"
+                            +"<button onClick='acceptArticle(\""+element['_id']+"\")'>Accept</button>"
+                            +"<button onClick='declineArticle(\""+element['_id']+"\")'>Decline</button>"
+                        +"</td>"
+                        +"<td><input id='"+element['_id']+"-reason'>"
+                        +"</tr>"
+                    );
+                });
+            });
+        });
+
+        function acceptArticle(articleId){
+            //TODO: Implement api call to accept article
+            alert("accepted: " + articleId);
+        }
+
+        function declineArticle(articleId){
+            //TODO: implement api call to decline article
+            let reason = document.getElementById(articleId+"-reason").value;
+            alert("declined: " + articleId + " reason: " + reason);
+        }
+    </script>
 </body>
 </html>
