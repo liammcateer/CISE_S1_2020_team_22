@@ -14,16 +14,20 @@
     <nav></nav>
     <h1>Analyse Queue</h1>
     <h3>Articles awaiting analysis</h3>
-    <table>
+    <table id="queue">
         <tr>
             <th>Title</th>
-            <th>Link</th>
-            <th>Submitter</th>
+            <th>Author</th>
+            <th>Year</th>
         </tr>
     </table>
     <br>
     <h3>Add Article to SEER</h3>
     <form>
+        <label>Select Article: </label>
+        <select id="article-dropdown">
+
+        </select>
         <div style="border: 1px solid black">
             <h4>Research design</h4>
             <label>Research question or aim</label>
@@ -125,6 +129,27 @@
                 '<input type="range" min="1" max="5" step="1" name="rating">'+
             '</div>').insertBefore('#add-evidence-button');
         }
+
+        $(function(){
+            $.get("/api/v1/article", function(data, status){
+                data['data']['article'].forEach(element => {
+                    $("#queue").append(
+                        "<tr>"
+                        +"<td>"+element['title']+"</td>"
+                        +"<td>"+element['author']+"</td>"
+                        +"<td>"+element['year']+"</td>"
+                        +"</tr>"
+                    );
+
+                    $("#article-dropdown").append(
+                        "<option value='"+element['_id']+"'>"
+                        +element['title']+", "+element['author']+", "+element['year']
+                        +"</option>"
+                    );
+                });
+            });
+        });
     </script>
+
 </body>
 </html>
