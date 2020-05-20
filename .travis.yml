@@ -2,6 +2,7 @@ language: node_js
 node_js:
   - node
 deploy:
+  provider: heroku
   api_key:
    secure: aU/ykvsT7vTqD6UfEVUx9+rcAp+QIvoUxQijwIQXDgxu5g1blEj/dm9UTDVj+022Tw+Lti35FlxnZ/xG+WgYaOzZNL1g8jMG4yxqLAUeOzBjvQTAt87LHiCJ+KrwGtu3SqSRDYcGQqDDBA3cBwxA0QkhRMRZAvnOmmZN0czKFVhIbNuRL/UsnLpABFwyORwvQY30pTw6SHn7cCqH0DCth+jilptFwr1wtuhA0tgcTHaM1/oKSJ1e3ZPDLdm4+KUXiyhFhbDIvOgd0mHwrt7kDp3zc8Vz3lh9odSSQM5ADHMGUU3u2oeg0vZqT81/sRtLixuQvm+eZlwAQtg0w2rXgrxotryo+zaoNyGx96aUAtWCx4CovjhpipN9cCDVZIqQWmaUvUxmmcX+DQ+wDLfIOY+w82kjFlHaeFPdAgWh8DkfSSV+6puGUUo6RhpTWdFvcAtviRB/BtpL4f15vWVk9JS9x5etViOc/TjU7F8LTBzzjR508uFfeN6DVgp1UAoDdbDhs51Yck93nGCkdXpHLrgpOPyHmWy2w51UK5YfL03/cieyw9dCG9SLNYA/xRfHbHfqSLHG6vdmFghJrQ/stmY6+iqeYFjJO0ALKJKm+hVmHFIU0iLf1OGln4QxypydFQbfp7DvfLuHa0fTp7yMs0hmJWz5ASwx6aLrCX5L1PY=
   app: cise-s1-2020-team-22
