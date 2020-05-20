@@ -68,6 +68,10 @@ const articleSchema = new mongoose.Schema({
     trim: true,
     default: 0,
   },
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const Article = mongoose.model('Article', articleSchema);
