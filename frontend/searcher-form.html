@@ -168,7 +168,6 @@
                         var result ="";
                         for (let i = 0; i < article.length; i++) {
 
-                            var test =article[i]["title"]==(advanceSearchArray[1]);
                           
                             if ((article[i]["title"].indexOf((advanceSearchArray[1])))
                                 && (article[i]["year"]==(parseInt(advanceSearchArray[2])))
@@ -179,6 +178,7 @@
                                     + "<th>Title</th>"
                                     + "<th>Author</th>"
                                     + "<th>Year</th>"
+                                    + "<th>Rate</th>"
                                     + "<th>Link</th>"
                                     + "</tr>"
                                     + "<tr>"
@@ -186,14 +186,24 @@
                                     + "<td>" + article[i]["author"] + "</td>"
                                     + "<td>" + article[i]["year"] + "</td>"
                                     + "<td>pending...</td>"
+                                    + "<td>pending...</td>"
                                     + "<tr>"
                                     + "</table>"
-                                document.getElementById("result").innerHTML = result;
+                                
                             }
 
-                            else {
-                                document.getElementById("result").innerHTML = "<p style='color:red'>Sorry no result</p>";
-                            }
+                           
+                        }
+
+                        //if no result
+                        if (result==""){
+                            document.getElementById("result").innerHTML = "<p style='color:red'>Sorry, no result</p>";
+                        }
+
+
+                        //just populate the result in a table.
+                        else{
+                        document.getElementById("result").innerHTML = result;
                         }
 
                     }
@@ -223,6 +233,7 @@
                                         + "<th>Title</th>"
                                         + "<th>Author</th>"
                                         + "<th>Year</th>"
+                                        + "<th>Rate</th>"
                                         + "<th>Link</th>"
                                         + "</tr>"
                                         + "<tr>"
@@ -230,15 +241,16 @@
                                         + "<td>" + article[i]["author"] + "</td>"
                                         + "<td>" + article[i]["year"] + "</td>"
                                         + "<td>pending...</td>"
+                                        + "<td>pending...</td>"
                                         + "<tr>"
                                         + "</table>"
-                                    document.getElementById("result").innerHTML = result;
+                                    
                                 }
 
 
                             }
 
-
+                            document.getElementById("result").innerHTML = result;
 
                         }
 
