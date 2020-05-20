@@ -16,8 +16,8 @@
     <table id="queue">
         <tr>
             <th>Title</th>
-            <th>Author</th>
-            <th>Year</th>
+            <th>Details</th>
+            <th>Date Added</th>
             <th>Accept/decline</th>
             <th>Reason if declined</th>
         </tr>
@@ -25,17 +25,17 @@
 
     <script>
         $(function(){
-            $.get("/api/v1/article", function(data, status){
+            $.get("/api/v1/article/moderator", function(data, status){
                 data['data']['article'].forEach(element => {
                     $("#queue").append(
                         //TODO: Implement api call to get status and DOI
                         "<tr>"
                         +"<td>"+element['title']+"</td>"
-                        +"<td>"+element['author']+"</td>"
-                        +"<td>"+element['year']+"</td>"
+                        +"<td>"+element['detail']+"</td>"
+                        +"<td>"+element['date']+"</td>"
                         +"<td>"
                             +"<button onClick='acceptArticle(\""+element['_id']+"\")'>Accept</button>"
-                            +"<button onClick='declineArticle(\""+element['_id']+"\")'>Decline</button>"
+                            +"<button onClick='declineArticle(\""+element['title']+"\",\""+element['_id']+"\")'>Decline</button>"
                         +"</td>"
                         +"<td><input id='"+element['_id']+"-reason'>"
                         +"</tr>"
@@ -45,14 +45,33 @@
         });
 
         function acceptArticle(articleId){
-            //TODO: Implement api call to accept article
-            alert("accepted: " + articleId);
+            $.ajax({
+                url : 'api/v1/article/moderator/'+articleId,
+                type : 'PATCH',
+                contentType : 'application/json',
+                processData: false,
+                dataType: 'json'
+            });
+            location.reload();
         }
 
-        function declineArticle(articleId){
-            //TODO: implement api call to decline article
-            let reason = document.getElementById(articleId+"-reason").value;
-            alert("declined: " + articleId + " reason: " + reason);
+        function declineArticle(articleTitle, articleID){
+            $.ajax({
+                url : 'api/v1/article/moderator/',
+                data: '{"title": "'+articleTitle+'"}',
+                type : 'POST',
+                contentType : 'application/json',
+                processData: false,
+                dataType: 'json'
+            });
+            $.ajax({
+                url : 'api/v1/article/moderator/'+articleId,
+                type : 'DELETE',
+                contentType : 'application/json',
+                processData: false,
+                dataType: 'json'
+            });
+            location.reload();
         }
     </script>
 </body>
