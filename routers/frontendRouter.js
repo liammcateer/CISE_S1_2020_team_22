@@ -17,6 +17,11 @@ router.route('/nav').get(function(req, res) {
     res.sendFile(path.join(__dirname, '../', '/frontend/nav.html'));
 });
 
+
+router.route('/moderate').get(function(req, res) {
+    res.sendFile(path.join(__dirname, '../', '/frontend/moderator-form.html'));
+});
+
 router.route('/analyse').get(function(req, res) {
     res.sendFile(path.join(__dirname, '../', '/frontend/analyse-form.html'));
 });
