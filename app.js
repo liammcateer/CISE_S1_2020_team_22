@@ -11,9 +11,9 @@ app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
 // app.get('/', (rep, res) => {
-  // res.status(200).json({
-  //   message: 'Hello',
-  // });
+//   res.status(200).json({
+//     message: 'Hello',
+//   });
 // });
 
 app.use((req, res, next) => {
