@@ -1,7 +1,7 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 /* eslint-disable prettier/prettier */
 //import modules
 const Article = require('../models/articleModels');
-const APIFeatures = require("../utils/features");
 const ModeratorArticles = require('../models/moderatorModels')
 const Reject = require('../models/rejectedModels');
 
@@ -11,13 +11,37 @@ Method for Normal User
 //Search article by user
 exports.searchArticle = async (req, res) => {
   try{
-    const features = new APIFeatures(Article.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
+    const queryObj = { ...req.query };
+    const excluded = ['page', 'sort', 'limit', 'fields'];
+    excluded.forEach((el) => delete queryObj[el]);
 
-    const articles = await features.query;
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(
+      /\b(gte|gt|regex|lte|lt)\b/g,
+      (match) => `$${match}`
+    );
+
+    let query = Article.find(JSON.parse(queryStr));
+
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('year');
+    }
+
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    }
+
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 15;
+    const skip = (page - 1) * limit;
+
+    query = query.skip(skip).limit(limit);
+
+    const articles = await query;
     
     //const articles = await Article.find();
 

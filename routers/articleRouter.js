@@ -1,6 +1,7 @@
 //import modules
 const express = require('express');
 const articleController = require('../controllers/articleController');
+const userController = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ router
   .route('/')
   .get(articleController.searchArticle)
   .get(articleController.getArticle)
-  .post(articleController.submitNewArticle);
+  .post(userController.authorize_submitter, articleController.submitNewArticle);
 
 router
   .route('/admin/:id')

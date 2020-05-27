@@ -7,6 +7,7 @@ const moderatorSchema = new mongoose.Schema({
     required: [true, 'A article must have a title'],
     unique: true,
     trim: true,
+    mminlength: [15, 'Please enter a valid title or full name of the title'],
   },
   detail: {
     type: String,
@@ -14,7 +15,6 @@ const moderatorSchema = new mongoose.Schema({
       true,
       'A article must have some detail for our moderators to check if an article is avaliable or not',
     ],
-    trim: true,
   },
   status: {
     type: Boolean,
