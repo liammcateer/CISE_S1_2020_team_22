@@ -29,4 +29,9 @@ router.route('/submit').get(function(req, res) {
     res.sendFile(path.join(__dirname, '../', '/frontend/submitform.html'));
 });
 
+router.route('/search').get(function(req, res) {
+    res.sendFile(path.join(__dirname, '../', '/frontend/searcher-form.html'));
+});
+
+
 module.exports = router;
