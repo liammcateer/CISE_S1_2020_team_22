@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        let clicknumber = 0;
+
+        function hideNShow(id) {
+
+            clicknumber++;
+
+            //odd number of total clicks
+            if (clicknumber % 2 != 0) {
+                document.getElementById("details").style.display = 'block';
+            }
+            //even number
+            else {
+                document.getElementById("details").style.display = 'none';
+            }
+        }
+
+    </script>
+    <title>Searcher-form</title>
+</head>
+
+<body>
+
+    <!-- Navigation bar -->
+    <nav></nav>
+
+
+    <div class="container" style="margin-top:80px">
+
+        <div align="center">
+            <form>
+
+                <!-- searcher box -->
+                <div class="form-group" id="searchbox">
+                    <label>Please enter key words:</label>
+                    <input type="text" class="textInput" name="keywords" id="keywords" placeholder="Single keyword" />
+
+                    <!-- change the submit type to button, otherwise will keep refreshing the page -->
+                    <input class="btn btn-primary" style="padding: 0px 6px 2px 6px; margin-top: 0px;" type="button"
+                        name="Search" value="Search" onclick="getResult()" />
+                    <a id="link" href="javascript:hideNShow('advanceSearch')" id="advanceSearch">Advance search</a>
+                    <br>
+                    <br>
+                    <!-- sort options -->
+                    <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="sort">Most popular
+                        </label>
+                    </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="sort">Highest rate
+                        </label>
+                    </div>
+                    <div class="form-check-inline disabled">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="sort">Comprehensive sort
+                        </label>
+                    </div>
+
+                </div>
+
+
+
+                <!-- advanced search -->
+                <div id="details" class="form-group" style="display:none">
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-5" style="border:1px solid lightgrey;">
+                            <form>
+
+                                <label>Title:</label>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="title">Title:</label>
+                                    </div>
+                                    <select class="custom-select" id="title">
+                                        <option selected value="">Unknown</option>
+                                        <option value="Computing interaction effects and standard errors in logit and probit models">Computing interaction</option>
+                                        <option value="Quantum size effect in semiconductor microcrystals">Quantum size effect</option>
+                                        <option value="Surface stress in solids">Surface stress</option>
+                                    </select>
+                                </div>
+
+                                <label>Author:</label>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="">Author</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="authorname" >
+                                    
+                                </div>
+                                <br>
+                                <label>Year:</label>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="yearofpublish">Year of
+                                            Publish:</label>
+                                    </div>
+                                    <select class="custom-select" id="yearofpublish">
+                                        <option selected value="">Unknown</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2004">2004</option>
+                                        <option value="1978">1978</option>
+                                    </select>
+                                </div>
+                                <br>
+                                <input class="btn btn-primary" type="button" value="Search" onclick="getResult()" />
+                                <input type="reset" class="btn btn-warning" value ="clear"/>
+                            </form>
+                        </div>
+                        <div class="col-sm-2"></div>
+                    </div>
+
+                </div>
+
+                <div id="result">
+
+                </div>
+
+        </div>
+
+
+        <script>
+
+            function getResult() {
+
+
+                //Dont include the IP!!!!!!
+                $.getJSON('/api/v1/article/', function (data) {
+
+                    //data is the JSON string
+
+                    var keywords = document.getElementById("keywords").value;
+                    var inputAuthorName = document.getElementById("authorname").value;
+                  
+                    var inputTitle = document.getElementById("title").value;
+                    var inputYear = document.getElementById("yearofpublish").value;
+
+
+                    var advanceSearchArray = [];
+                    advanceSearchArray.push(inputAuthorName, inputTitle, inputYear);
+
+                    //check if advance search has blank area.
+                    var checkIfadvance = advanceSearchArray.every(element => element != "");
+
+                    //user advance search
+                    if (checkIfadvance) {
+
+                        var article = data["data"]["article"];
+                        var result ="";
+                        for (let i = 0; i < article.length; i++) {
+
+                          
+                            if ((article[i]["title"].indexOf((advanceSearchArray[1])))
+                                && (article[i]["year"]==(parseInt(advanceSearchArray[2])))
+                                && (article[i]["author"].indexOf((advanceSearchArray[0])))) {
+
+                                result += "<table class='table table-striped'>"
+                                    + "<tr>"
+                                    + "<th>Title</th>"
+                                    + "<th>Author</th>"
+                                    + "<th>Year</th>"
+                                    + "<th>Rate</th>"
+                                    + "<th>Link</th>"
+                                    + "</tr>"
+                                    + "<tr>"
+                                    + "<td>" + article[i]["title"] + "</td>"
+                                    + "<td>" + article[i]["author"] + "</td>"
+                                    + "<td>" + article[i]["year"] + "</td>"
+                                    + "<td>pending...</td>"
+                                    + "<td>pending...</td>"
+                                    + "<tr>"
+                                    + "</table>"
+                                
+                            }
+
+                           
+                        }
+
+                        //if no result
+                        if (result==""){
+                            document.getElementById("result").innerHTML = "<p style='color:red'>Sorry, no result</p>";
+                        }
+
+
+                        //just populate the result in a table.
+                        else{
+                        document.getElementById("result").innerHTML = result;
+                        }
+
+                    }
+
+                    //user input bar search
+                    else {
+
+                        //if both areas are blank
+                        if (keywords == "") {
+                            document.getElementById("result").innerHTML = "<p style='color:red'>Please complete search information</p>";
+                        }
+
+                        //Advance blank, bar has input
+                        else {
+
+                            var article = data["data"]["article"];
+                            var result ="";
+                            for (let i = 0; i < article.length; i++) {
+
+                               
+                                if ((article[i]["title"]==(keywords))
+                                    || (article[i]["author"])==(keywords)
+                                    || (article[i]["year"])==(parseInt(keywords))) {
+
+                                    result += "<table class='table table-striped'>"
+                                        + "<tr>"
+                                        + "<th>Title</th>"
+                                        + "<th>Author</th>"
+                                        + "<th>Year</th>"
+                                        + "<th>Rate</th>"
+                                        + "<th>Link</th>"
+                                        + "</tr>"
+                                        + "<tr>"
+                                        + "<td>" + article[i]["title"] + "</td>"
+                                        + "<td>" + article[i]["author"] + "</td>"
+                                        + "<td>" + article[i]["year"] + "</td>"
+                                        + "<td>pending...</td>"
+                                        + "<td>pending...</td>"
+                                        + "<tr>"
+                                        + "</table>"
+                                    
+                                }
+
+
+                            }
+
+                            document.getElementById("result").innerHTML = result;
+
+                        }
+
+                    }
+                }
+           )}
+        
+
+        </script>
+
+
+
+</body>
+
+</html>

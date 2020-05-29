@@ -55,7 +55,7 @@
             location.reload();
         }
 
-        function declineArticle(articleTitle, articleID){
+        function declineArticle(articleTitle, articleId){
             $.ajax({
                 url : 'api/v1/article/moderator/',
                 data: '{"title": "'+articleTitle+'"}',
