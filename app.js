@@ -25,16 +25,30 @@ app.use((req, res, next) => {
   next();
 });
 
-//Post Request to Submit Article
+//Post request to submit article
 app.post('/api/v1/article/moderator', urlencodedParser, function(req, res, next){
-  var post = new moderatorSchema({
-    title: req.body.title,
-    detail: req.body.author + ' ' + req.body.year + ' ' + req.body.title + ' ' + req.body.journel + ' ' + req.body.volume + ' ' + req.body.startPage + '-' + req.body.endPage,
-  })
-  post.save(function (err, post) {
-    if (err) { return next(err) }
-    res.redirect('/submit');
-  })
+  //Post request for an article.
+  if(req.body.choice == "isArticle"){
+    var post = new moderatorSchema({
+      title: req.body.title,
+      detail: req.body.author + '. (' + req.body.year + '). ' + req.body.title + '. ' + req.body.journel + ', ' + req.body.volume + ', ' + req.body.startPage + '-' + req.body.endPage + '. ' + req.body.DOI + '.',
+    })
+    post.save(function (err, post) {
+      if (err) { return next(err) }
+      res.redirect('/submit-article');
+    })
+  }
+  //Post request for a book.
+  if(req.body.choice == "isBook"){
+    var post = new moderatorSchema({
+      title: req.body.title,
+      detail: req.body.author + '. (' + req.body.year + '). ' + req.body.title + '. ' + req.body.place + ': ' + req.body.name +'.',
+    })
+    post.save(function (err, post) {
+      if (err) { return next(err) }
+      res.redirect('/submit-book');
+    })
+  }
 });
 
 app.use('/api/v1/article', searchRouter);
