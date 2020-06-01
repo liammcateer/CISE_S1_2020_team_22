@@ -1,4 +1,5 @@
 //import modules
+//This file is not using any more, the reject dabase is merged with moderator queue
 const mongoose = require('mongoose');
 
 const rejectSchema = new mongoose.Schema({

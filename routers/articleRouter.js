@@ -9,7 +9,10 @@ router
   .route('/')
   .get(articleController.searchArticle)
   .get(articleController.getArticle)
-  .post(userController.authorize_submitter, articleController.submitNewArticle);
+  .post(articleController.submitNewArticle);
+
+//router.route('/').get(articleController.searchArticle).get(articleController.getArticle).post(userController.authorize_submitter, articleController.submitNewArticle);
+
 
 router
   .route('/admin/:id')

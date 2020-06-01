@@ -186,7 +186,7 @@ exports.updateStatusByModerator = async (req, res) => {
 //Get a specific rejected article from database, search by the name of an article
 exports.getRejectedArticle = async(req, res) => {
   try{
-    const articles = await Reject.find({title: req.params.id});
+    const articles = await ModeratorArticles.find({title: req.params.title, rejected: true});
     res.status(200).json({
       status: 'success',
       data: {
@@ -204,7 +204,10 @@ exports.getRejectedArticle = async(req, res) => {
 //create new reject article
 exports.createReject = async(req, res) => {
   try{
-    const newArticle = await Reject.create(req.body);
+    const newArticle = await ModeratorArticles.findOneAndUpdate(req.params.title, {rejected: true}, {
+      new: true,
+      runValidators: true,
+    });
 
     res.status(200).json({
       status: 'success',

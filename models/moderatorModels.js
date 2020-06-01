@@ -16,6 +16,14 @@ const moderatorSchema = new mongoose.Schema({
       'A article must have some detail for our moderators to check if an article is avaliable or not',
     ],
   },
+  rejected: {
+    type: Boolean,
+    required: [
+      true,
+      'A statu of rejection is required'
+    ],
+    default: false,
+  },
   status: {
     type: Boolean,
     required: [
