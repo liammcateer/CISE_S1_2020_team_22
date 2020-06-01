@@ -25,8 +25,14 @@ router.route('/analyse').get(function(req, res) {
     res.sendFile(path.join(__dirname, '../', '/frontend/analyse-form.html'));
 });
 
-router.route('/submit').get(function(req, res) {
-    res.sendFile(path.join(__dirname, '../', '/frontend/submitform.html'));
+router.route('/submit-article').get(function(req, res) {
+    res.sendFile(path.join(__dirname, '../', '/frontend/submit-article.html'));
+});
+router.route('/submit-book').get(function(req, res) {
+    res.sendFile(path.join(__dirname, '../', '/frontend/submit-book.html'));
+});
+router.route('/ask').get(function(req, res) {
+    res.sendFile(path.join(__dirname, '../', '/frontend/ask-form.html'));
 });
 
 router.route('/search').get(function(req, res) {
