@@ -1,42 +1,55 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Choose</title>
-    <style>
-        .container { 
-          height: 200px;
-          position: relative;
-        }
-        
-        .center {
-          margin: 0;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-        }
-        
-a:link, a:visited {
-  background-color: black;
-  color: white;
-  padding: 14px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size:24px;
-}
-        </style>
-</head>
-<body>
 
-    <div class="container">
-      <h2 style="text-align: center;">Would you like to submit a book or an article?</h2>
-        <div class="center">
-          <a href="submit-article.html">Article</a>
-          <a href="submit-book.html">Book</a>
-        </div>
-      </div>
-   
+<head>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script>
+        $(function () {
+            $('nav').load('/nav.html');
+        });
+    </script>
+  <title>Choose</title>
+  <style>
+    .container {
+      height: 200px;
+      position: relative;
+    }
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .custom-link:link,
+    .custom-link:visited {
+      background-color: black;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 24px;
+    }
+  </style>
+</head>
+
+<body>
+<nav></nav>
+  <div class="container">
+    <h2 style="text-align: center;">Would you like to submit a book or an article?</h2>
+    <div class="center">
+      <a class="custom-link" href="submit-article.html">Article</a>
+      <a class="custom-link" href="submit-book.html">Book</a>
+    </div>
+  </div>
+
 </body>
+
 </html>
