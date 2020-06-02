@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function () {
+            $('head').load('/head');
+            $('nav').load('/nav');
+        });
+    </script>
+    <title>Analyse form</title>
+</head>
+
+<body>
+    <nav></nav>
+    <h1>Analyse Queue</h1>
+    <h3>Articles awaiting analysis</h3>
+    <table id="queue">
+        <tr>
+            <th>Title</th>
+            <th>Date submitted</th>
+        </tr>
+    </table>
+    <br><br>
+    <h3>Add Article to SEER</h3>
+    <form id="analyst-form">
+        <label>Select Article: </label>
+        <select name="title" id="article-dropdown"></select>
+        <br><br>
+        <label>Author</label>
+        <input name="author">
+        <br><br>
+        <label>Year</label>
+        <input name="year">
+        <br><br>
+        <label>Publisher</label>
+        <input name="publisher">
+        <br><br>
+        <label>Publisher city</label>
+        <input name="publisher_city">
+        <br><br>
+        <label>Publisher country</label>
+        <input name="publisher_country">
+        <br><br>
+        <label>Url</label>
+        <input name="url">
+        <br><br>
+        <label>DOI</label>
+        <input name="doi">
+        <br><br>
+        <label>Edition</label>
+        <input name="edition">
+        <br><br>
+        <label>Translator</label>
+        <input name="translator">
+        <br><br>
+        <label>Page</label>
+        <input name="page">
+        <br><br>
+        <label>Chapter</label>
+        <input name="chapter">
+        <br><br>
+        <label>Volume</label>
+        <input name="volume">
+        <br><br>
+
+        <!-- <div style="border: 1px solid black">
+            <h4>Research design</h4>
+            <label>Research question or aim</label>
+            <input type="text" name="aim">
+            <br><br><br><br>
+            <label>Research method</label>
+            <select multiple>
+                <option value="Case study">Case Study</option>
+                <option value="Field Observation">Field Observation</option>
+                <option value="Experiment">Experiment</option>
+                <option value="Interview">Interview</option>
+                <option value="Survey">Survey</option>
+            </select>
+            <br><br><br><br>
+            <label>Research metrics</label>
+            <input type="text" name="metrics">
+            <br><br><br><br>
+            <label>Research participants</label>
+            <select multiple>
+                <option value="Undergraduate students">Undergraduate Students</option>
+                <option value="Postgraduate Students">Postgraduate Students</option>
+                <option value="Practitioners">Practitioners</option>
+            </select>
+        </div>
+        <div id="evidence-items" style="border: 1px solid black">
+            <h4>Evidence Items</h4>
+            <div class="evidence-item">
+                <label>Benefit</label>
+                <input type="text" name="benefit">
+                <label>Context</label>
+                <input type="text" name="context">
+                <label>Result</label>
+                <input type="text" name="result">
+                <label>Confidence Rating</label>
+                <input type="range" min="1" max="5" step="1" name="rating">
+            </div>
+            <br><br>
+            <button type="button" id="add-evidence-button" onClick="addEvidenceItem()">Add item</button>
+            <br><br><br><br>
+        </div>
+
+        <div id="se-method" style="border: 1px solid black">
+            <h4>SE Method</h4>
+            <label>SE method</label>
+            <select multiple>
+                <option value="TDD">TDD</option>
+                <option value="BDD">BDD</option>
+                <option value="Pair programming">pair programming</option>
+                <option value="Planning poker">Planning poker</option>
+                <option value="Daily standup meetings">Daily standup meetings</option>
+                <option value="Story boards">Story boards</option>
+                <option value="User story mapping">User story mapping</option>
+                <option value="Continuous integration">Continuous integration</option>
+                <option value="Retrospectives">Retrospectives</option>
+                <option value="Burn down charts">Burn down</option>
+                <option value="Requirements prioritisation">Requirements prioritisation</option>
+                <option value="Version control">Version control</option>
+                <option value="Code sharing">Code sharing</option>
+            </select>
+        </div>
+        <div id="se-methodology" style="border: 1px solid black">
+            <h4>SE Methodology</h4>
+            <label>Methodology</label>
+            <select multiple>
+                <option value="Scrum">Scrum</option>
+                <option value="Waterfall">Waterfall</option>
+                <option value="Sprial">Sprial</option>
+                <option value="XP">XP</option>
+                <option value="Rational unified process">Rational unified process</option>
+                <option value="Crystal">Crystal</option>
+                <option value="Clean room">Clean room</option>
+                <option value="Feature driven development">Feature driven development</option>
+                <option value="Model driven development">Model driven development</option>
+                <option value="Domain driven development">Domain driven development</option>
+                <option value="Formal methods">Formal methods</option>
+                <option value="Problem driven development">Problem driven development</option>
+                <option value="Cloud computing">Cloud computing</option>
+                <option value="Service oriented development">Service oriented development</option>
+                <option value="Aspect oriented development">Aspect oriented development</option>
+                <option value="Value driven development">Value driven development</option>
+                <option value="Product driven development">Product driven development</option>
+                <option value="Agile">Agile</option>                
+            </select>
+        </div> -->
+    </form>
+    <button type="button" onClick="submitForm()">Submit</button>
+
+
+    <script>
+        function addEvidenceItem() {
+            $('<div class="evidence-item">' +
+                '<label>Benefit </label>' +
+                '<input type="text" name="benefit">' +
+                '<label> Context </label>' +
+                '<input type="text" name="context">' +
+                '<label> Result </label>' +
+                '<input type="text" name="result">' +
+                '<label> Confidence Rating </label>' +
+                '<input type="range" min="1" max="5" step="1" name="rating">' +
+                '</div>').insertBefore('#add-evidence-button');
+        }
+
+        $(function () {
+            $.get("/api/v1/article/analyst", function (data, status) {
+                data['data']['article'].forEach(element => {
+                    $("#queue").append(
+                        "<tr>"
+                        + "<td>" + element['title'] + "</td>"
+                        + "<td>" + element['date'] + "</td>"
+                        + "</tr>"
+                    );
+
+                    $("#article-dropdown").append(
+                        "<option value='" + element['title'] + "' data='"+element['_id']+"'>"
+                        + element['title']
+                        + "</option>"
+                    );
+                });
+            });
+        });
+
+        function submitForm() {
+            var articleSubmission = {};
+            var form = document.getElementById("analyst-form");
+            var elements = form.querySelectorAll("input, select");
+            for(var i = 0; i < elements.length; i++){
+                var name = elements[i].name;
+                var value = elements[i].value;
+
+                if(name){
+                    articleSubmission[name] = value;
+                }
+            }
+
+            //add article to seer
+
+            $.ajax({
+                type: "POST",
+                url: "api/v1/article/analyst",
+                data: JSON.stringify(articleSubmission),
+                success: function(){
+                    alert("Success!")
+                },
+                error: function(){
+                    alert("Error adding post");
+                },
+                dataType: "json",
+                contentType : "application/json"
+            });
+        }
+    </script>
+
+</body>
+
+</html>

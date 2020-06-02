@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Moderate Article</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script> 
+        $(function(){
+            $('head').load('/head');
+            $('nav').load('/nav');
+        });
+    </script> 
+</head>
+<body>
+    <nav></nav>
+    <h1>Moderate Articles</h1>
+    <table id="queue">
+        <tr>
+            <th>Title</th>
+            <th>Details</th>
+            <th>Date Added</th>
+            <th>Accept/decline</th>
+            <th>Reason if declined</th>
+        </tr>
+    </table>
+
+    <script>
+        $(function(){
+            $.get("/api/v1/article/moderator", function(data, status){
+                data['data']['article'].forEach(element => {
+                    $("#queue").append(
+                        //TODO: Implement api call to get status and DOI
+                        "<tr>"
+                        +"<td>"+element['title']+"</td>"
+                        +"<td>"+element['detail']+"</td>"
+                        +"<td>"+element['date']+"</td>"
+                        +"<td>"
+                            +"<button onClick='acceptArticle(\""+element['_id']+"\")'>Accept</button>"
+                            +"<button onClick='declineArticle(\""+element['title']+"\",\""+element['_id']+"\")'>Decline</button>"
+                        +"</td>"
+                        +"<td><input id='"+element['_id']+"-reason'>"
+                        +"</tr>"
+                    );
+                });
+            });
+        });
+
+        function acceptArticle(articleId){
+            $.ajax({
+                url : 'api/v1/article/moderator/'+articleId,
+                type : 'PATCH',
+                contentType : 'application/json',
+                processData: false,
+                dataType: 'json'
+            });
+            location.reload();
+        }
+
+        function declineArticle(articleTitle, articleID){
+            $.ajax({
+                url : 'api/v1/article/moderator/',
+                data: '{"title": "'+articleTitle+'"}',
+                type : 'POST',
+                contentType : 'application/json',
+                processData: false,
+                dataType: 'json'
+            });
+            $.ajax({
+                url : 'api/v1/article/moderator/'+articleId,
+                type : 'DELETE',
+                contentType : 'application/json',
+                processData: false,
+                dataType: 'json'
+            });
+            location.reload();
+        }
+    </script>
+</body>
+</html>
