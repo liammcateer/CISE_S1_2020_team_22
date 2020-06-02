@@ -2,7 +2,6 @@
 const express = require('express');
 const searchRouter = require('./routers/articleRouter');
 const submitRouter = require('./routers/userRouter');
-const frontendRouter = require('./routers/frontendRouter');
 
 const app = express();
 
@@ -23,6 +22,6 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/article', searchRouter);
 app.use('/api/v1/user', submitRouter);
-app.use('/', frontendRouter);
+app.use('/', express.static(__dirname + '/frontend'));
 
 module.exports = app;
