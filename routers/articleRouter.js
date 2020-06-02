@@ -28,6 +28,10 @@ router
   .post(articleController.createReject);
 
 router
+  .route('/moderator/:title')
+  .get(articleController.checkArticle);
+
+router
   .route('/moderator/:id')
   .patch(articleController.updateStatusByModerator)
   .get(articleController.getRejectedArticle)

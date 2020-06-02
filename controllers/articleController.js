@@ -145,7 +145,7 @@ Method for Moderator
 //get all articles that need to be checked
 exports.moderatorArticles = async (req, res) => {
   try{
-    const articles = await ModeratorArticles.find({status: {$ne: true}})
+    const articles = await ModeratorArticles.find({status: {$ne: true},  rejected: {$ne: true}})
 
     res.status(200).json({
       status: 'success',
@@ -201,6 +201,44 @@ exports.getRejectedArticle = async(req, res) => {
   }
 };
 
+//check if the article is already in the queue or already rejected
+exports.checkArticle = async(req, res) => {
+  try{
+    const articles = await ModeratorArticles.find({title: req.params.title});
+    console.log(articles);
+    console.log(articles[0].rejected);
+    if(articles[0].rejected===false){
+      res.status(200).json({
+        status: 'success',
+        messahe: 'The article has already in the queue',
+        data: {
+          article: articles,
+        }
+      });
+    }else if(articles[0].rejected===true){
+      res.status(200).json({
+        status: 'success',
+        messahe: 'The article has rejectred',
+        data: {
+          article: articles,
+        }
+      });
+    }else{
+      res.status(200).json({
+        status: 'success',
+        message: 'this article is not in the queue',
+      });
+    }
+    
+  }catch (err) {
+    res.status(404).json({
+      status: 'failed',
+      message: err
+    });
+  }
+};
+
+
 //create new reject article
 exports.createReject = async(req, res) => {
   try{
@@ -246,7 +284,7 @@ Method for Analyste
 //get all new articles which moderated by moderator
 exports.analysteArticles = async (req, res) => {
   try{
-    const articles = await ModeratorArticles.find({status: {$ne: false}})
+    const articles = await ModeratorArticles.find({status: {$ne: false}, rejected: {$ne: true}})
 
     res.status(200).json({
       status: 'success',
