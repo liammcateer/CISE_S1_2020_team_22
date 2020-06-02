@@ -5,7 +5,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script>
         $(function () {
             $('nav').load('/nav.html');
@@ -14,19 +15,31 @@
     <title>Analyse form</title>
 </head>
 
-<body>
+<body onload="loadQueue()">
     <nav></nav>
-    <h1>Analyse Queue</h1>
+    <h1>Analyst Queue</h1>
     <h3>Articles awaiting analysis</h3>
-    <table id="queue">
-        <tr>
-            <th>Title</th>
-            <th>Date submitted</th>
-        </tr>
+    <table class="table table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Author</th>
+                <th scope="col">Year</th>
+                <th scope="col">Volume</th>
+                <th scope="col">Issue</th>
+                <th scope="col">Journal</th>
+                <th scope="col">Pages</th>
+                <th scope="col">DOI</th>
+                <th scope="col">Message</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody id="queue-body">
+
+        </tbody>
     </table>
     <br><br>
-    <h3>Add Article to SEER</h3>
-    <form id="analyst-form">
+    <!-- <form id="analyst-form">
         <label>Select Article: </label>
         <select name="title" id="article-dropdown"></select>
         <br><br>
@@ -65,9 +78,9 @@
         <br><br>
         <label>Volume</label>
         <input name="volume">
-        <br><br>
+        <br><br> -->
 
-        <!-- <div style="border: 1px solid black">
+    <!-- <div style="border: 1px solid black">
             <h4>Research design</h4>
             <label>Research question or aim</label>
             <input type="text" name="aim">
@@ -152,69 +165,33 @@
             </select>
         </div> -->
     </form>
-    <button type="button" onClick="submitForm()">Submit</button>
+    <button class="btn btn-primary" type="button" onClick="submitForm()">Submit</button>
 
 
     <script>
-        function addEvidenceItem() {
-            $('<div class="evidence-item">' +
-                '<label>Benefit </label>' +
-                '<input type="text" name="benefit">' +
-                '<label> Context </label>' +
-                '<input type="text" name="context">' +
-                '<label> Result </label>' +
-                '<input type="text" name="result">' +
-                '<label> Confidence Rating </label>' +
-                '<input type="range" min="1" max="5" step="1" name="rating">' +
-                '</div>').insertBefore('#add-evidence-button');
-        }
+        let articles;
 
-        $(function () {
-            $.get("/api/v1/article/analyst", function (data, status) {
-                data['data']['article'].forEach(element => {
-                    $("#queue").append(
-                        "<tr>"
-                        + "<td>" + element['title'] + "</td>"
-                        + "<td>" + element['date'] + "</td>"
-                        + "</tr>"
-                    );
+        function loadQueue() {
+            //get data from api
+            $.get("api/v1/article/analyst", function (data) {
+                articles = data['data']['article'];
 
-                    $("#article-dropdown").append(
-                        "<option value='" + element['title'] + "' data='"+element['_id']+"'>"
-                        + element['title']
-                        + "</option>"
-                    );
+                //print data into table
+                articles.forEach(element => {
+                    let row = "<tr>"
+                        + `<td>${(element['title'] == undefined ? "" : element['title'])}</td>`
+                        + `<td>${(element['author'] == undefined ? "" : element['author'])}</td>`
+                        + `<td>${(element['year'] == undefined ? "" : element['year'])}</td>`
+                        + `<td>${(element['volume'] == undefined ? "" : element['volume'])}</td>`
+                        + `<td>${(element['issue'] == undefined ? "" : element['issue'])}</td>`
+                        + `<td>${(element['journal'] == undefined ? "" : element['journal'])}</td>`
+                        + `<td>${(element['pages'] == undefined ? "" : element['pages'])}</td>`
+                        + `<td>${(element['doi'] == undefined ? "" : element['doi'])}</td>`
+                        + `<td>${(element['message'] == undefined ? "" : element['message'])}</td>`
+                        + `<td><button class='btn btn-success'>Add</button><button class="btn btn-danger">Reject</button></td>`
+                        + "</tr>";
+                    $('#queue-body').append(row)
                 });
-            });
-        });
-
-        function submitForm() {
-            var articleSubmission = {};
-            var form = document.getElementById("analyst-form");
-            var elements = form.querySelectorAll("input, select");
-            for(var i = 0; i < elements.length; i++){
-                var name = elements[i].name;
-                var value = elements[i].value;
-
-                if(name){
-                    articleSubmission[name] = value;
-                }
-            }
-
-            //add article to seer
-
-            $.ajax({
-                type: "POST",
-                url: "api/v1/article/analyst",
-                data: JSON.stringify(articleSubmission),
-                success: function(){
-                    alert("Success!")
-                },
-                error: function(){
-                    alert("Error adding post");
-                },
-                dataType: "json",
-                contentType : "application/json"
             });
         }
     </script>
