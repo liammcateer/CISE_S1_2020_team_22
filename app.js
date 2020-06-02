@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const searchRouter = require('./routers/articleRouter');
 const submitRouter = require('./routers/userRouter');
-const frontendRouter = require('./routers/frontendRouter');
 const moderatorSchema = require('./models/moderatorModels');
 const app = express();
 
@@ -35,7 +34,7 @@ app.post('/api/v1/article/moderator', urlencodedParser, function(req, res, next)
     })
     post.save(function (err, post) {
       if (err) { return next(err) }
-      res.redirect('/submit-article');
+      res.redirect('/submit-article.html');
     })
   }
   //Post request for a book.
@@ -46,13 +45,13 @@ app.post('/api/v1/article/moderator', urlencodedParser, function(req, res, next)
     })
     post.save(function (err, post) {
       if (err) { return next(err) }
-      res.redirect('/submit-book');
+      res.redirect('/submit-book.html');
     })
   }
 });
 
 app.use('/api/v1/article', searchRouter);
 app.use('/api/v1/user', submitRouter);
-app.use('/', frontendRouter);
+app.use('/', express.static(__dirname + '/frontend'));
 
 module.exports = app;
