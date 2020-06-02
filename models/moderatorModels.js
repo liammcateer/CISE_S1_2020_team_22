@@ -49,6 +49,7 @@ const moderatorSchema = new mongoose.Schema({
   },
   detail: {
     type: String,
+    required: [true, 'A article must have some detail'],
   },
   rejected: {
     type: Boolean,
