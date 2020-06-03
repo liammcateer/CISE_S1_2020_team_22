@@ -72,6 +72,47 @@ const articleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  aim: {
+    type: String,
+    required: [true, 'A article must have an aim'],
+    trim: true,
+  },
+  method: {
+    type: [String],
+    required: [true, 'A article must have at least one method'],
+    trim: true,
+  },
+  metrics: {
+    type: String,
+    required: [true, 'A article must have research metrics'],
+    trim: true,
+  },
+  participants: {
+    type: [String],
+    required: [true, 'A article must have at least one participant type'],
+    trim: true,
+  },
+  evidence: {
+    type: [{
+      benefit: String,
+      context: String,
+      result: String,
+      confidenceRating: Number,
+      integrity: String
+    }],
+    required: [true, 'A article must have at least one evidence item'],
+    trim: true,
+  },
+  SEmethod: {
+    type: [String],
+    required: [true, 'A article must have at least one SE method'],
+    trim: true,
+  },
+  SEmethodology: {
+    type: [String],
+    required: [true, 'A article must have at least one SE methodology'],
+    trim: true,
+  },
 });
 
 const Article = mongoose.model('Article', articleSchema);
