@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+
+<html>
+
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script>
+        $(function () {
+            $('nav').load('/nav.html');
+        });
+    </script>
+    <title>Submit</title>
+</head>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background: #ecf1f4;
+        font-family: sans-serif;
+    }
+
+    .form-wrap {
+        width: 320px;
+        background: #3e3d3d;
+        padding: 40px 20px;
+        box-sizing: border-box;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    h1 {
+        text-align: center;
+        color: #fff;
+        font-weight: normal;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        background: none;
+        border: 1px solid #fff;
+        border-radius: 3px;
+        padding: 6px 15px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: #fff;
+    }
+
+    input[type="button"] {
+        background: #bac675;
+        border: 0;
+        cursor: pointer;
+        color: #3e3d3d;
+    }
+
+    input[type="button"]:hover {
+        background: #a4b15c;
+        transition: .6s;
+    }
+
+    ::placeholder {
+        color: #fff;
+    }
+</style>
+
+<body>
+    <nav></nav>
+    <div class="form-wrap">
+
+        <form onsubmit="submitBook(event, this)">
+
+            <h1>Submit a source</h1>
+            <input type="text" required name="title" id="title" placeholder="Title">
+            <input type="text" required name="author" id="author" placeholder="Author">
+            <input type="datetime" required name="year" id="book-year" placeholder="Year">
+            <input type="text" required name="publisher_city" id="book-place" placeholder="Place of publication">
+            <input type="text" required name="publisher" id="publisher-name" placeholder="Name of publisher">
+            <input type="textarea" required name="detail" id="book-detail" placeholder="Message">
+            <input type="submit" value="Submit">
+
+        </form>
+
+        <div style="text-align:center; color : white">
+            <p>The total submitted sources are: <span id="count"></span></p>
+        </div>
+    </div>
+    <script>
+        function submitBook(e, form) {
+            e.preventDefault();
+            $.ajax({
+                url: 'api/v1/article',
+                type: "POST",
+                data: $('form').serialize(),
+                success: function (data) {
+                    alert("Book submitted successfully.");
+                    form.reset();
+                },
+                error: function (data) {
+                    alert("Error submitting book.");
+                }
+            });
+            return false;
+        }
+        //Get request for getting the count of submitted articles
+        $.getJSON('api/v1/article/moderator', function (data, textStatus, jqXHR) {
+            //Fetching the lenght and showing in HTML page.
+            document.getElementById("count").innerHTML = data.data.article.length;
+        });
+    </script>
+
+</body>
+
+
+
+
+
+
+</html>
