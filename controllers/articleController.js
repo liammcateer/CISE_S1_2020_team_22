@@ -242,7 +242,7 @@ exports.checkArticle = async(req, res) => {
 //create new reject article
 exports.createReject = async(req, res) => {
   try{
-    const newArticle = await ModeratorArticles.findOneAndUpdate(req.params.title, {rejected: true}, {
+    const newArticle = await ModeratorArticles.findOneAndUpdate(req.params.title, {rejected: true, rejectMessage: req.body.rejectMessage}, {
       new: true,
       runValidators: true,
     });
