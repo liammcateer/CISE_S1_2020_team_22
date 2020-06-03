@@ -732,7 +732,7 @@
 
                     for (let i = 0; i < article.length; i++) {
 
-                        result += `<tr onclick='openArticleModal(\"${viewResult[i]['_id']}\")'>`
+                        result += `<tr onclick='openArticleModal(\"${article[i]['_id']}\")'>`
                             + "<td class='title'>" + article[i]["title"] + "</td>"
                             + "<td class='author'>" + article[i]["author"] + "</td>"
                             + "<td class='year'>" + article[i]["year"] + "</td>"
