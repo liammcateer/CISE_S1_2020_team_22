@@ -52,7 +52,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="addForm">
                         <div id="accordion">
                             <div class="card">
                                 <div class="card-header" id="headingOne">
@@ -73,7 +73,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Research method</label>
-                                            <select class="form-control" multiple>
+                                            <select name="research-method[]" class="form-control" multiple>
                                                 <option value="Case study">Case Study</option>
                                                 <option value="Field Observation">Field Observation</option>
                                                 <option value="Experiment">Experiment</option>
@@ -88,7 +88,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Research participants</label>
-                                            <select class="form-control" multiple>
+                                            <select name="participants[]" class="form-control" multiple>
                                                 <option value="Undergraduate students">Undergraduate Students</option>
                                                 <option value="Postgraduate Students">Postgraduate Students</option>
                                                 <option value="Practitioners">Practitioners</option>
@@ -116,26 +116,26 @@
                                                 <div class="form-row">
                                                     <div class="form-group col">
                                                         <label>Benefit</label>
-                                                        <input class="form-control" type="text" name="benefit[]">
+                                                        <input class="form-control" type="text" name="evidence[1][benefit]">
                                                     </div>
                                                     <div class="form-group col">
                                                         <label>Context</label>
-                                                        <input class="form-control" type="text" name="context[]">
+                                                        <input class="form-control" type="text" name="evidence[1][context]">
                                                     </div>
                                                     <div class="form-group col">
                                                         <label>Result</label>
-                                                        <input class="form-control" type="text" name="result[]">
+                                                        <input class="form-control" type="text" name="evidence[1][result]">
                                                     </div>
                                                 </div>
                                                 <div class="form-row">
                                                     <div class="form-group col">
                                                         <label>Confidence Rating</label>
                                                         <input class="form-control" type="range" min="1" max="5"
-                                                            step="1" name="confidence-rating[]">
+                                                            step="1" name="evidence[1][confidence-rating]">
                                                     </div>
                                                     <div class="form-group col">
                                                         <label>Method implementation integrity</label>
-                                                        <input class="form-control" type="text" name="integrity[]">
+                                                        <input class="form-control" type="text" name="evidence[1][integrity]">
                                                     </div>
                                                 </div>
                                             </div>
@@ -162,7 +162,7 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label>SE method</label>
-                                            <select class="form-control" multiple>
+                                            <select name="method[]" class="form-control" multiple>
                                                 <option value="TDD">TDD</option>
                                                 <option value="BDD">BDD</option>
                                                 <option value="Pair programming">pair programming</option>
@@ -182,7 +182,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Methodology</label>
-                                            <select class="form-control" multiple>
+                                            <select name="methodology[]" class="form-control" multiple>
                                                 <option value="Scrum">Scrum</option>
                                                 <option value="Waterfall">Waterfall</option>
                                                 <option value="Sprial">Sprial</option>
@@ -221,7 +221,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Add Article</button>
+                    <button type="button" id="addFormModalSubmitBtn" class="btn btn-primary">Add Article</button>
                 </div>
             </div>
         </div>
@@ -291,11 +291,33 @@
                 }
             });
             $('#addFormModalTitle').html(article['title']);
+            $('#addFormModalSubmitBtn').click(() => addArticle(article['_id']));
             $('#addFormModal').modal({});
         }
 
-        function addArticle(article) {
-
+        function addArticle(articleId) {
+            let article = null;
+            articles.forEach(element => {
+                if (element['_id'] == articleId) {
+                    article = element;
+                }
+            });
+            
+            // Send form to backend
+            data = $.param(article) + '&' + $('#addForm').serialize();
+            console.log(data);
+            $.ajax({
+                url: 'api/v1/article/analyst',
+                type: "POST",
+                data: data,
+                success: function(data){
+                    alert("Article submitted successfully.");
+                    $('#addForm').trigger('reset');
+                },
+                error: function(data){
+                    alert("Error submitting article.");
+                }
+            });
         }
 
         function showRejectForm(articleId) {
@@ -314,33 +336,36 @@
 
         }
 
+        let evidenceItems = 1;
+
         function addEvidenceItem() {
+            evidenceItems++;
             const evidenceFormString = `
             <div class="row evidence-item">
                 <div class="col-11">
                     <div class="form-row">
                         <div class="form-group col">
                             <label>Benefit</label>
-                            <input class="form-control" type="text" name="benefit[]">
+                            <input class="form-control" type="text" name="evidence[${evidenceItems}][benefit]">
                         </div>
                         <div class="form-group col">
                             <label>Context</label>
-                            <input class="form-control" type="text" name="context[]">
+                            <input class="form-control" type="text" name="evidence[${evidenceItems}][context]">
                         </div>
                         <div class="form-group col">
                             <label>Result</label>
-                            <input class="form-control" type="text" name="result[]">
+                            <input class="form-control" type="text" name="evidence[${evidenceItems}][result]">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col">
                             <label>Confidence Rating</label>
                             <input class="form-control" type="range" min="1" max="5"
-                                step="1" name="confidence-rating[]">
+                                step="1" name="evidence[${evidenceItems}][confidence-rating]">
                         </div>
                         <div class="form-group col">
                             <label>Method implementation integrity</label>
-                            <input class="form-control" type="text" name="integrity[]">
+                            <input class="form-control" type="text" name="evidence[${evidenceItems}][integrity]">
                         </div>
                     </div>
                 </div>
@@ -353,6 +378,7 @@
         }
 
         function removeEvidenceItem(button){
+            evidenceItems--;
             console.log(button);
             const finalParent = button.parentElement.parentElement;
             finalParent.parentNode.removeChild(finalParent);
