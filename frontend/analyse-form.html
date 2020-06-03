@@ -116,15 +116,18 @@
                                                 <div class="form-row">
                                                     <div class="form-group col">
                                                         <label>Benefit</label>
-                                                        <input class="form-control" type="text" name="evidence[1][benefit]">
+                                                        <input class="form-control" type="text"
+                                                            name="evidence[1][benefit]">
                                                     </div>
                                                     <div class="form-group col">
                                                         <label>Context</label>
-                                                        <input class="form-control" type="text" name="evidence[1][context]">
+                                                        <input class="form-control" type="text"
+                                                            name="evidence[1][context]">
                                                     </div>
                                                     <div class="form-group col">
                                                         <label>Result</label>
-                                                        <input class="form-control" type="text" name="evidence[1][result]">
+                                                        <input class="form-control" type="text"
+                                                            name="evidence[1][result]">
                                                     </div>
                                                 </div>
                                                 <div class="form-row">
@@ -135,7 +138,8 @@
                                                     </div>
                                                     <div class="form-group col">
                                                         <label>Method implementation integrity</label>
-                                                        <input class="form-control" type="text" name="evidence[1][integrity]">
+                                                        <input class="form-control" type="text"
+                                                            name="evidence[1][integrity]">
                                                     </div>
                                                 </div>
                                             </div>
@@ -302,7 +306,7 @@
                     article = element;
                 }
             });
-            
+
             // Send form to backend
             data = $.param(article) + '&' + $('#addForm').serialize();
             console.log(data);
@@ -310,11 +314,17 @@
                 url: 'api/v1/article/analyst',
                 type: "POST",
                 data: data,
-                success: function(data){
+                success: function (data) {
                     alert("Article submitted successfully.");
                     $('#addForm').trigger('reset');
+
+                    //remove article from queue
+                    $.ajax({
+                        url: 'api/v1/article/moderator/' + articleId,
+                        type: 'DELETE',
+                    });
                 },
-                error: function(data){
+                error: function (data) {
                     alert("Error submitting article.");
                 }
             });
@@ -377,7 +387,7 @@
             $(".evidence-items").append(evidenceFormString);
         }
 
-        function removeEvidenceItem(button){
+        function removeEvidenceItem(button) {
             evidenceItems--;
             console.log(button);
             const finalParent = button.parentElement.parentElement;

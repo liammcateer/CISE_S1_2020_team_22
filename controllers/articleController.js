@@ -264,11 +264,11 @@ exports.createReject = async(req, res) => {
 //delete invalid article from moderator/analyst queue, this method might be also used by analyst
 exports.deleteInvalidArticle = async (req, res) => {
   try{
-    await ModeratorArticles.findOneAndDelete(req.params.id);
+    await ModeratorArticles.findOneAndDelete({_id: req.params.id});
 
     res.status(200).json({
       status: 'success',
-      message: 'Article delete successed'
+      message: 'Article delete successed',
     })
   }catch(err){
     res.status(404).json({
