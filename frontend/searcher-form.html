@@ -101,6 +101,10 @@
             height: 37px;
 
         }
+
+        td{
+            cursor: pointer;
+        }
     </style>
     <title>Searcher-form</title>
 </head>
@@ -646,7 +650,7 @@
                     var inputContent = keywords.split(" ");
                     result += "<p>You searched for articles with the keywords <strong><i>" + inputContent + "</i></strong></p>";
                     
-                    result += "<table class='table table-striped'>"
+                    result += "<table class='table table-hover table-striped'>"
                         + "<tr>"
                         + "<th id='titleHeader'>Title</th>"
                         + "<th id='authorHeader'>Author</th>"
@@ -673,7 +677,7 @@
 
                     for (let i = 0; i < viewResult.length; i++) {
 
-                        result += "<tr>"
+                        result += `<tr onclick='openArticleModal(\"${viewResult[i]['_id']}\")'>`
                             + "<td class='title'>" + viewResult[i]["title"] + "</td>"
                             + "<td class='author'>" + viewResult[i]["author"] + "</td>"
                             + "<td class='year'>" + viewResult[i]["year"] + "</td>"
@@ -728,7 +732,7 @@
 
                     for (let i = 0; i < article.length; i++) {
 
-                        result += "<tr>"
+                        result += `<tr onclick='openArticleModal(\"${viewResult[i]['_id']}\")'>`
                             + "<td class='title'>" + article[i]["title"] + "</td>"
                             + "<td class='author'>" + article[i]["author"] + "</td>"
                             + "<td class='year'>" + article[i]["year"] + "</td>"
@@ -791,7 +795,88 @@
 
         }
 
+        //View full article modal
+        function openArticleModal(articleId){
+            $.ajax({
+                url: 'api/v1/article/admin/' + articleId,
+                method: 'GET',
+                success: function(data){
+                    console.log(data);
+                    //Generate body string
+                    let article = data['data']['article'];
+
+                    //expand evidence items
+                    let evidenceHtmlString = "";
+                    article['evidence'].forEach(element => {
+                        evidenceHtmlString += `<p>
+                            <strong>Benefit: </strong>${element['benefit']} 
+                            <strong>Context: </strong>${element['context']} 
+                            <strong>Result: </strong>${element['result']} 
+                            <strong>Confidence Rating: </strong>${element['confidenceRating']} 
+                            <strong>Integrity: </strong>${element['integrity']} 
+                        </p>`;
+                    });
+                    let htmlString = `
+                        <h3>Research Design</h3>
+                        <p><strong>Question/Aim: </strong>${article['aim']}</p>
+                        <p><strong>Research Method: </strong>${article['method']}</p>
+                        <p><strong>Research Metrics: </strong>${article['metrics']}</p>
+                        <p><strong>Participants: </strong>${article['participants']}</p>
+                        <br>
+
+                        <h3>Se Method and Methodology</h3>
+                        <p><strong>Software Engineering Methods: </strong>${article['SEMethod']}</p>
+                        <p><strong>Software Engineering Methodologies: </strong>${article['SEMethodology']}</p>
+                        <br>
+
+                        <h3>Evidence</h3>
+                        ${evidenceHtmlString}
+                        <h3>Bibliographic Data</h3>
+                        <p>
+                            <strong>Title: </strong>${article['title']}
+                            <strong>Author: </strong>${article['author']}
+                            <strong>Year: </strong>${article['year']}
+                        </p>
+                        <p>
+                            <strong>Publisher: </strong>${article['publisher']}
+                            <strong>Publisher City: </strong>${article['publisher_city']}
+                        </p>
+                        <p>
+                            <strong>Journal: </strong>${article['journal']}
+                            <strong>Volume: </strong>${article['volume']}
+                            <strong>Issue: </strong>${article['issue']}
+                        </p>
+                        <p><strong>DOI: </strong>${article['doi']}</p>
+
+                        <br>
+                        <p><strong>Rating: </strong>${article['rating']} | ${article['rating_count']} votes</p>
+
+                    `;
+
+                    $('#articlaModalBody').html(htmlString);
+                    $('#articleModal').modal({});
+                }
+            })
+        }
+
     </script>
+
+    <!-- full article display modal -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="articleModal" aria-labelledby="articleModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Article</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="articlaModalBody">
+
+            </div>
+        </div>
+        </div>
+    </div>
 
     <!-- Include Bootstrap Datepicker -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
@@ -799,6 +884,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 
 
