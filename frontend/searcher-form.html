@@ -122,12 +122,14 @@
                 onclick="getResult()" />
             <input id="clear" class="btn btn-warning" type="button" name="clear" value="Clear"
                 />
-        </form>
+        
 
         <!-- sort options -->
-        <div>
+        <div id="sortOptions" style="display:none">
             <div class="form-check-inline">
+                
                 <label class="form-check-label">
+                    <label class="form-check-label"><strong><i>Sort:</i></strong></label>
                     <input type="radio" class="form-check-input" name="sort" value="year">By publish year
                 </label>
             </div>
@@ -143,6 +145,28 @@
             </div>
         </div>
 
+        <br>
+        <!-- View options -->
+        <div id="viewOptions" style="display:none" >
+              <label class="form-check-label"><strong><i>View:</i></strong></label>
+                <label class = "checkbox-inline">
+                   <input type = "checkbox" id = "title" onchange="hide_show_table(this.id)" checked> Title
+                </label>
+                <label class = "checkbox-inline">
+                   <input type = "checkbox" id = "author" onchange="hide_show_table(this.id)" checked> Author
+                </label>
+                <label class = "checkbox-inline">
+                    <input type = "checkbox" id = "year" onchange="hide_show_table(this.id)" checked> Year
+                 </label>
+                 <label class = "checkbox-inline">
+                    <input type = "checkbox" id = "rate" onchange="hide_show_table(this.id)" checked> Rate
+                 </label>
+                 <label class = "checkbox-inline">
+                    <input type = "checkbox" id = "doi" onchange="hide_show_table(this.id)"checked> Doi
+                 </label>      
+        </div>
+    </form>
+        <a id="options" href="#">View Options</a>
         <a id="link" href="#">Advance Search</a>
         <br>
         <br>
@@ -292,6 +316,21 @@
                 
         });
 
+            //view options links onclick event
+            let optionCount = 0;
+            $("#options").click(function () {
+                optionCount++;
+                if (optionCount % 2 != 0) {
+                    $("#options").text("Hide");
+                }
+                else {
+                    $("#options").text("View Options");
+                   
+                }
+                $("#sortOptions").slideToggle();
+                $("#viewOptions").slideToggle();
+
+            });
 
             //change the word of the link, switch between "simple search" and "advance search".
             let count = 0;
@@ -477,7 +516,11 @@
                 url += yearFont+"[gte]=" + startDate.trim();
             }
 
-            if (endDate != "") {
+            if (endDate != "" && startDate !="") {
+                url += "&year"+"[lte]=" + endDate.trim();
+            }
+
+            if (endDate != "" && startDate =="") {
                 url += yearFont+"[lte]=" + endDate.trim();
             }
 
@@ -499,7 +542,7 @@
                             url += conditionFront+subject[i] + "[regex]=" + inputs[i];
                         }
                         else {
-                            url += conditionFront+subject[i] + "![regex]=" + inputs[i];
+                            url += conditionFront+subject[i] + "[regex]!=" + inputs[i];
                         }
 
                     }
@@ -509,7 +552,7 @@
                             url +="&"+subject[i] + "[regex]=" + inputs[i];
                         }
                         else {
-                            url +="&"+subject[i] + "![regex]=" + inputs[i];
+                            url +="&"+subject[i] + "[regex]!=" + inputs[i];
                         }
                     }
 
@@ -631,11 +674,11 @@
                     for (let i = 0; i < viewResult.length; i++) {
 
                         result += "<tr>"
-                            + "<td>" + viewResult[i]["title"] + "</td>"
-                            + "<td>" + viewResult[i]["author"] + "</td>"
-                            + "<td>" + viewResult[i]["year"] + "</td>"
-                            + "<td>" + viewResult[i]["rating"] + "</td>"
-                            + "<td>pending...</td>"
+                            + "<td class='title'>" + viewResult[i]["title"] + "</td>"
+                            + "<td class='author'>" + viewResult[i]["author"] + "</td>"
+                            + "<td class='year'>" + viewResult[i]["year"] + "</td>"
+                            + "<td class='rate'>" + viewResult[i]["rating"] + "</td>"
+                            + "<td class='doi'>pending...</td>"
                             + "<tr>"
                         }
 
@@ -686,11 +729,11 @@
                     for (let i = 0; i < article.length; i++) {
 
                         result += "<tr>"
-                            + "<td>" + article[i]["title"] + "</td>"
-                            + "<td>" + article[i]["author"] + "</td>"
-                            + "<td>" + article[i]["year"] + "</td>"
-                            + "<td>" + article[i]["rating"] + "</td>"
-                            + "<td>pending...</td>"
+                            + "<td class='title'>" + article[i]["title"] + "</td>"
+                            + "<td class='author'>" + article[i]["author"] + "</td>"
+                            + "<td class='year'>" + article[i]["year"] + "</td>"
+                            + "<td class='rate'>" + article[i]["rating"] + "</td>"
+                            + "<td class='doi'>pending...</td>"
                             + "<tr>"
                     }
 
@@ -722,6 +765,32 @@
         subject=[];
         url="";
     }
+
+        function hide_show_table(checkboxID) {
+            
+            var checkboxValue = document.getElementById(checkboxID).value;
+            if (checkboxValue == "on") {
+                var tableColumn = document.getElementsByClassName(checkboxID);
+                for (var i = 0; i < tableColumn.length; i++) {
+                    tableColumn[i].style.display = "none";
+                }
+                
+                document.getElementById(checkboxID + "Header").style.display = "none";
+                document.getElementById(checkboxID).value = "hide";
+            }
+
+            else {
+                var tableColumn = document.getElementsByClassName(checkboxID);
+                for (var i = 0; i < tableColumn.length; i++) {
+                    tableColumn[i].style.display = "table-cell";
+                }
+                
+                document.getElementById(checkboxID + "Header").style.display = "table-cell";
+                document.getElementById(checkboxID).value = "on";
+            }
+
+        }
+
     </script>
 
     <!-- Include Bootstrap Datepicker -->
