@@ -2,268 +2,889 @@
 <html>
 
 <head>
+
+    <!-- import Jquery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script>
         $(function () {
             $('nav').load('/nav.html');
         });
     </script>
 
-
-    <script type="text/javascript">
-
-        let clicknumber = 0;
-
-        function hideNShow(id) {
-
-            clicknumber++;
-
-            //odd number of total clicks
-            if (clicknumber % 2 != 0) {
-                document.getElementById("details").style.display = 'block';
-            }
-            //even number
-            else {
-                document.getElementById("details").style.display = 'none';
-            }
+    <!-- styles for the elements on this page -->
+    <style>
+        /* center the container */
+        #searchinput {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 50vh;
         }
 
-    </script>
+        /* search field */
+        #keywords {
+            padding: 12px;
+            margin: 10px;
+            border: 1px solid rgb(155, 155, 155);
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 500px;
+
+        }
+
+        /* align the button to the search input */
+        #mainButton {
+            position: relative;
+            bottom: 2px;
+            padding: 12px;
+
+        }
+
+        #clear {
+            position: relative;
+            bottom: 2px;
+            padding: 12px;
+
+        }
+
+        /* advance search link */
+        #link {
+            position: relative;
+            top: 15px;
+        }
+
+        /* advance search whole*/
+        #details {
+            position: relative;
+            width: 800px;
+            left: 20px;
+        }
+
+
+        div.conditions {
+            border: 1px solid lightgrey;
+            padding: 5px;
+        }
+
+
+
+        label.iflabel {
+            font-weight: bold;
+            font-size: large;
+            position: relative;
+            top: 8px;
+        }
+
+
+        #inputvalue {
+            position: relative;
+            line-height: 32px;
+        }
+
+
+        .addButton {
+            position: relative;
+            border: 0;
+            height: 37px;
+
+        }
+
+        .deleteButton {
+            position: relative;
+            border: 0;
+            height: 37px;
+
+        }
+
+        td{
+            cursor: pointer;
+        }
+    </style>
     <title>Searcher-form</title>
 </head>
 
 <body>
+    <nav>
+    </nav>
+    <!-- search field -->
+    <div id="searchinput" class="container" style="margin-top:80px">
 
-    <!-- Navigation bar -->
-    <nav></nav>
+        <form id="mainsearchform">
 
+            <!-- searcher box -->
 
-    <div class="container" style="margin-top:80px">
-
-        <div align="center">
-            <form>
-
-                <!-- searcher box -->
-                <div class="form-group" id="searchbox">
-                    <label>Please enter key words:</label>
-                    <input type="text" class="textInput" name="keywords" id="keywords" placeholder="Single keyword" />
-
-                    <!-- change the submit type to button, otherwise will keep refreshing the page -->
-                    <input class="btn btn-primary" style="padding: 0px 6px 2px 6px; margin-top: 0px;" type="button"
-                        name="Search" value="Search" onclick="getResult()" />
-                    <a id="link" href="javascript:hideNShow('advanceSearch')" id="advanceSearch">Advance search</a>
-                    <br>
-                    <br>
-                    <!-- sort options -->
-                    <div class="form-check-inline">
-                        <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="sort">Most popular
-                        </label>
-                    </div>
-                    <div class="form-check-inline">
-                        <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="sort">Highest rate
-                        </label>
-                    </div>
-                    <div class="form-check-inline disabled">
-                        <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="sort">Comprehensive sort
-                        </label>
-                    </div>
-
-                </div>
-
-
-
-                <!-- advanced search -->
-                <div id="details" class="form-group" style="display:none">
-                    <br>
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-5" style="border:1px solid lightgrey;">
-                            <form>
-
-                                <label>Title:</label>
-
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="title">Title:</label>
-                                    </div>
-                                    <select class="custom-select" id="title">
-                                        <option selected value="">Unknown</option>
-                                        <option value="Computing interaction effects and standard errors in logit and probit models">Computing interaction</option>
-                                        <option value="Quantum size effect in semiconductor microcrystals">Quantum size effect</option>
-                                        <option value="Surface stress in solids">Surface stress</option>
-                                    </select>
-                                </div>
-
-                                <label>Author:</label>
-
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="">Author</span>
-                                    </div>
-                                    <input type="text" class="form-control" id="authorname" >
-                                    
-                                </div>
-                                <br>
-                                <label>Year:</label>
-
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="yearofpublish">Year of
-                                            Publish:</label>
-                                    </div>
-                                    <select class="custom-select" id="yearofpublish">
-                                        <option selected value="">Unknown</option>
-                                        <option value="2019">2019</option>
-                                        <option value="2004">2004</option>
-                                        <option value="1978">1978</option>
-                                    </select>
-                                </div>
-                                <br>
-                                <input class="btn btn-primary" type="button" value="Search" onclick="getResult()" />
-                                <input type="reset" class="btn btn-warning" value ="clear"/>
-                            </form>
-                        </div>
-                        <div class="col-sm-2"></div>
-                    </div>
-
-                </div>
-
-                <div id="result">
-
-                </div>
-
-        </div>
-
-
-        <script>
-
-            function getResult() {
-
-
-                //Dont include the IP!!!!!!
-                $.getJSON('/api/v1/article/', function (data) {
-
-                    //data is the JSON string
-
-                    var keywords = document.getElementById("keywords").value;
-                    var inputAuthorName = document.getElementById("authorname").value;
-                  
-                    var inputTitle = document.getElementById("title").value;
-                    var inputYear = document.getElementById("yearofpublish").value;
-
-
-                    var advanceSearchArray = [];
-                    advanceSearchArray.push(inputAuthorName, inputTitle, inputYear);
-
-                    //check if advance search has blank area.
-                    var checkIfadvance = advanceSearchArray.every(element => element != "");
-
-                    //user advance search
-                    if (checkIfadvance) {
-
-                        var article = data["data"]["article"];
-                        var result ="";
-                        for (let i = 0; i < article.length; i++) {
-
-                          
-                            if ((article[i]["title"].indexOf((advanceSearchArray[1])))
-                                && (article[i]["year"]==(parseInt(advanceSearchArray[2])))
-                                && (article[i]["author"].indexOf((advanceSearchArray[0])))) {
-
-                                result += "<table class='table table-striped'>"
-                                    + "<tr>"
-                                    + "<th>Title</th>"
-                                    + "<th>Author</th>"
-                                    + "<th>Year</th>"
-                                    + "<th>Rate</th>"
-                                    + "<th>Link</th>"
-                                    + "</tr>"
-                                    + "<tr>"
-                                    + "<td>" + article[i]["title"] + "</td>"
-                                    + "<td>" + article[i]["author"] + "</td>"
-                                    + "<td>" + article[i]["year"] + "</td>"
-                                    + "<td>pending...</td>"
-                                    + "<td>pending...</td>"
-                                    + "<tr>"
-                                    + "</table>"
-                                
-                            }
-
-                           
-                        }
-
-                        //if no result
-                        if (result==""){
-                            document.getElementById("result").innerHTML = "<p style='color:red'>Sorry, no result</p>";
-                        }
-
-
-                        //just populate the result in a table.
-                        else{
-                        document.getElementById("result").innerHTML = result;
-                        }
-
-                    }
-
-                    //user input bar search
-                    else {
-
-                        //if both areas are blank
-                        if (keywords == "") {
-                            document.getElementById("result").innerHTML = "<p style='color:red'>Please complete search information</p>";
-                        }
-
-                        //Advance blank, bar has input
-                        else {
-
-                            var article = data["data"]["article"];
-                            var result ="";
-                            for (let i = 0; i < article.length; i++) {
-
-                               
-                                if ((article[i]["title"]==(keywords))
-                                    || (article[i]["author"])==(keywords)
-                                    || (article[i]["year"])==(parseInt(keywords))) {
-
-                                    result += "<table class='table table-striped'>"
-                                        + "<tr>"
-                                        + "<th>Title</th>"
-                                        + "<th>Author</th>"
-                                        + "<th>Year</th>"
-                                        + "<th>Rate</th>"
-                                        + "<th>Link</th>"
-                                        + "</tr>"
-                                        + "<tr>"
-                                        + "<td>" + article[i]["title"] + "</td>"
-                                        + "<td>" + article[i]["author"] + "</td>"
-                                        + "<td>" + article[i]["year"] + "</td>"
-                                        + "<td>pending...</td>"
-                                        + "<td>pending...</td>"
-                                        + "<tr>"
-                                        + "</table>"
-                                    
-                                }
-
-
-                            }
-
-                            document.getElementById("result").innerHTML = result;
-
-                        }
-
-                    }
-                }
-           )}
+            <label for="keywords">Descriptions:</label>
+            <input type="text" class="textInput" name="keywords" id="keywords" placeholder="Seer it!" required />
+            <!-- change the submit type to button, otherwise will keep refreshing the page -->
+            <input id="mainButton" class="btn btn-primary" type="submit" name="Search" value="Search"
+                onclick="getResult()" />
+            <input id="clear" class="btn btn-warning" type="button" name="clear" value="Clear"
+                />
         
 
-        </script>
+        <!-- sort options -->
+        <div id="sortOptions" style="display:none">
+            <div class="form-check-inline">
+                
+                <label class="form-check-label">
+                    <label class="form-check-label"><strong><i>Sort:</i></strong></label>
+                    <input type="radio" class="form-check-input" name="sort" value="year">By publish year
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="sort" value="rating">By rating
+                </label>
+            </div>
+            <div class="form-check-inline disabled">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="sort" value="author">By author name
+                </label>
+            </div>
+        </div>
+
+        <br>
+        <!-- View options -->
+        <div id="viewOptions" style="display:none" >
+              <label class="form-check-label"><strong><i>View:</i></strong></label>
+                <label class = "checkbox-inline">
+                   <input type = "checkbox" id = "title" onchange="hide_show_table(this.id)" checked> Title
+                </label>
+                <label class = "checkbox-inline">
+                   <input type = "checkbox" id = "author" onchange="hide_show_table(this.id)" checked> Author
+                </label>
+                <label class = "checkbox-inline">
+                    <input type = "checkbox" id = "year" onchange="hide_show_table(this.id)" checked> Year
+                 </label>
+                 <label class = "checkbox-inline">
+                    <input type = "checkbox" id = "rate" onchange="hide_show_table(this.id)" checked> Rate
+                 </label>
+                 <label class = "checkbox-inline">
+                    <input type = "checkbox" id = "doi" onchange="hide_show_table(this.id)"checked> Doi
+                 </label>      
+        </div>
+    </form>
+        <a id="options" href="#">View Options</a>
+        <a id="link" href="#">Advance Search</a>
+        <br>
+        <br>
+
+
+
+        <form id="details" style="display:none">
+            <div id="allElements">
+
+                <br>
+                <br>
+
+                <!-- date range div -->
+                <div class="conditions">
+                    <div class="row no-gutters">
+
+                        <div class="col-sm-3">
+                            <label class="iflabel">Date Range from</label>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <input class="form-control start_date" type="text" style="position: relative"
+                                placeholder="start year" id="startdate">
+                        </div>
+
+                        <div class="col-sm-1">
+                            <label class="iflabel">to</label>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <input class="form-control end_date" type="text" style="position: relative"
+                                placeholder="end year" id="enddate">
+                        </div>
+                    </div><!-- end of row -->
+                </div>
+
+                <br>
+                <br>
+
+                <!-- multiple conditions -->
+                <div class="conditions" id="constrains">
+                    <div class="row no-gutters">
+
+                        <div class="col-sm-1">
+                            <label class="iflabel">If</label>
+                        </div>
+
+                        <div class="col-sm-4">
+
+                            <select class="custom-select subject" required>
+                                <option selected value="">Name of Field</option>
+                                <option value="author">Author</option>
+                                <option value="title">Article title</option>
+
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <select class="custom-select operator" required>
+                                <option selected value="">Operator</option>
+                                <option value="contains">Contains</option>
+                                <option value="doesntContain">Does Not Contain</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <input class="inputvalueclass" id="inputvalue" type="text" placeholder="value" required />
+                        </div>
+
+                        <div class="col-sm-0.5 btn-group">
+                            <input class="btn btn-success addButton" type="button" value="+" id="add">
+                        </div>
+                    </div><!-- end of row -->
+                </div>
+            </div>
+        </form>
+
+
+        <div id="result">
+        </div>
+
+    </div> <!-- end of container -->
+
+    <script>
+
+        $(document).ready(function () {
+
+            var $allElements = $('allElements');
+
+            // prevent page refresh after clicking submit type button
+            $("#mainsearchform").submit(function (e) {
+                e.preventDefault();
+
+            });
+
+            $("#details").submit(function (e) {
+                e.preventDefault();
+
+            });
+
+
+            var table = $('table');
+    
+             $('#titleHeader, #authorHeader, #yearHeader, #rateHeader, #doiHeader')
+                .wrapInner('<span title="sort this column"/>')
+                .each(function(){
+            
+            var th = $(this),
+                thIndex = th.index(),
+                inverse = false;
+            
+            th.click(function(){
+                
+                table.find('td').filter(function(){
+                    
+                    return $(this).index() === thIndex;
+                    
+                }).sortElements(function(a, b){
+                    
+                    if ($.text([a]) > $.text([b])){
+                        if (inverse){
+                            return -1;
+                        }
+                        else{
+                            return 1;
+                        }
+                    }
+                    else{
+                        if (inverse){
+                            return 1;
+                        }
+                        else{
+                            return -1;
+                        }
+
+                    }                   
+                }, function(){
+                    
+                    // parentNode is the element we want to move
+                    return this.parentNode; 
+                    
+                });
+                
+                inverse = !inverse;
+                    
+            });
+                
+        });
+
+            //view options links onclick event
+            let optionCount = 0;
+            $("#options").click(function () {
+                optionCount++;
+                if (optionCount % 2 != 0) {
+                    $("#options").text("Hide");
+                }
+                else {
+                    $("#options").text("View Options");
+                   
+                }
+                $("#sortOptions").slideToggle();
+                $("#viewOptions").slideToggle();
+
+            });
+
+            //change the word of the link, switch between "simple search" and "advance search".
+            let count = 0;
+            $("#link").click(function () {
+                count++;
+                if (count % 2 != 0) {
+                    $("#link").text("Back to Simple Search");
+                    $("#details").fadeOut();
+                    $("#keywords").prop('disabled', true);
+                }
+                else {
+                    $("#link").text("Advance Search");
+                    $("#details").fadeIn();
+                    $("#keywords").prop('disabled', false);
+                }
+
+                $("#details").slideToggle();
+
+            });
+
+            $("#clear").click(function (){
+               document.getElementById("result").innerHTML="<p></p>";
+            })
+
+            //will only fetch year from the calender
+            $("#startdate").datepicker({
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                startDate: '1900',
+                endDate: new Date(),
+            });;
+            $("#enddate").datepicker({
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                startDate: '1900',
+                endDate: new Date(),
+            });;
+
+            //add the search condition as a variable
+            var searchConditions =
+                '<div class="conditions" id = "constrains">'
+                + '<div class="row no-gutters">'
+                + ' <div class="col-sm-1">'
+                + ' <label class="iflabel">If</label>'
+                + ' </div>'
+                + ' <div class="col-sm-4">'
+                + ' <select class="custom-select subject" >'
+                + ' <option selected value="">Name of Field</option>'
+                + ' <option value="author">Author</option>'
+                + ' <option value="title">Article title</option>'
+                + '  </select>'
+                + ' </div>'
+                + ' <div class="col-sm-3">'
+                + ' <select class="custom-select operator">'
+                + '<option selected value="">Operator</option>'
+                + '<option value="contains">Contains</option>'
+                + '<option value="doesntContain">Does Not Contain</option>'
+                + ' </select>'
+                + ' </div>'
+                + '<div class="col-sm-3">'
+                + ' <input type="text" id="inputvalue" placeholder="value" class="inputvalueclass">'
+                + '</div>'
+                + '<div class="col-sm-1 btn-group">'
+                + '<input class="btn btn-success addButton" type="button" value="+" id="add">'
+                + '<input class="btn btn-danger deleteButton" type="button" value="-" id="delete">'
+                + '</div>'
+                + '</div><!-- end of row -->'
+                + '</div>';
+
+            //apend new constains everytime click on add       
+            $(document).on('click', '.addButton', function (e) {
+                $('#allElements').append(
+                    searchConditions
+                )
+            });
+
+            $(document).on('click', '.deleteButton', function (e) {
+                removeCurrent($(this))
+            });
+        })
+
+        /* global variables below
+        ---------------------------------------------------------------------------------------------
+        */
+        var keywords;
+        var linkValue;
+        var startDate;
+        var endDate;
+        var allSubject;
+        var subject = [];
+        var allOperator;
+        var operator = [];
+        var allValueInputs;
+        var inputs = [];
+        var url;
+        var countSearch = 0;
+        var searchTotal = "";
+        var sortCriterial = "";
+        /* global variables above
+       ---------------------------------------------------------------------------------------------
+       */
+
+        //get the sort criterial
+        function getSortConditions() {
+            var ele = document.getElementsByName('sort');
+
+            for (i = 0; i < ele.length; i++) {
+                if (ele[i].checked) {
+                    sortCriterial = ele[i].value
+                };
+            }
+        }
+
+        //remove the condition filter.
+        function removeCurrent(thisObj) {
+            thisObj.parent().parent().parent().remove();
+        }
+
+        function fetchValues() {
+
+            keywords = document.getElementById("keywords").value;
+            linkValue = document.getElementById("link").innerHTML;
+
+            //get date
+            startDate = document.getElementById("startdate").value;
+            endDate = document.getElementById("enddate").value;
+
+            //get subject
+            allSubject = document.getElementsByClassName("subject");
+            for (var i = 0; i < allSubject.length; i++) {
+                if (typeof allSubject[i].value !== "undefined") {
+                    subject.push(allSubject[i].value);
+                }
+            }
+
+            //get operator
+            allOperator = document.getElementsByClassName("operator");
+            for (var i = 0; i < allOperator.length; i++) {
+                if (typeof allOperator[i].value !== "undefined") {
+                    operator.push(allOperator[i].value);
+                }
+            }
+
+            //get inputs
+            allValueInputs = document.getElementsByClassName("inputvalueclass");
+            for (var i = 0; i < allValueInputs.length; i++) {
+                if (typeof allValueInputs[i].value !== "undefined") {
+                    inputs.push(allValueInputs[i].value);
+                }
+            }
+
+        }
+
+        function customizeURL() {
+            let yearFont;
+            let conditionFront;
+            //clear url;
+            url="";
+
+            getSortConditions();
+            url = "/api/v1/article?";
+            
+            if (sortCriterial != "") {
+                url += "sort=" + sortCriterial;
+            }
+
+            //if use the simple search, just need to include sort
+            if (linkValue == "Advance Search") {
+                return url;
+            }
+
+            if (sortCriterial ==""){
+                yearFont = "year";
+            }
+            else{
+                yearFont = "&year";
+            }
+            if (startDate != "") {
+                url += yearFont+"[gte]=" + startDate.trim();
+            }
+
+            if (endDate != "" && startDate !="") {
+                url += "&year"+"[lte]=" + endDate.trim();
+            }
+
+            if (endDate != "" && startDate =="") {
+                url += yearFont+"[lte]=" + endDate.trim();
+            }
+
+            //get rid of all empty constrains
+            clearEmptyElements();
+
+            if (sortCriterial ==""&&endDate==""&&startDate==""){
+                conditionFront = "";
+            }
+            else{
+                conditionFront = "&";
+            }
+
+                for (let i = 0; i < operator.length; i++) {
+
+                    if (i==0){
+                       
+                        if (operator[i] == "contains") {
+                            url += conditionFront+subject[i] + "[regex]=" + inputs[i];
+                        }
+                        else {
+                            url += conditionFront+subject[i] + "[regex]!=" + inputs[i];
+                        }
+
+                    }
+
+                    else{
+                        if (operator[i] == "contains") {
+                            url +="&"+subject[i] + "[regex]=" + inputs[i];
+                        }
+                        else {
+                            url +="&"+subject[i] + "[regex]!=" + inputs[i];
+                        }
+                    }
+
+                }
+            
+
+
+            return url;
+        }
+
+        // function toUpper(input) {
+        //     return input.charAt(0).toUpperCase() + input.slice(1);
+        // }
+
+        // function toLower(input) {
+        //     return input.charAt(0).toLowerCase() + input.slice(1);
+        // }
+
+        //Search button on click function
+        function getResult() {
+
+            // get all the values from inputs
+            fetchValues();
+            //get table result
+            getTable();
+        }
+
+        function clearEmptyElements() {
+            //remove empty element in the related array  
+            subject.map(e => {
+                if (e == "") {
+                    operator.splice(subject.indexOf(e), 1);
+                    inputs.splice(subject.indexOf(e), 1);
+                }
+            })
+            subject = subject.filter(e => {
+                return e != "";
+            })
+
+            operator.map(e => {
+                if (e == "") {
+                    subject.splice(operator.indexOf(e), 1);
+                    inputs.splice(operator.indexOf(e), 1);
+                }
+            })
+            operator = operator.filter(e => {
+                return e != "";
+            })
+            inputs.map(e => {
+                if (e == "") {
+                    operator.splice(inputs.indexOf(e), 1);
+                    subject.splice(inputs.indexOf(e), 1);
+                }
+            })
+            inputs = inputs.filter(e => {
+                return e != "";
+            })
+        }
+        
+        //function to check if a json file includes duplicate values.
+        function valueExists(jsObj, value){
+            for (var key in jsObj){
+
+                if (jsObj[key].toString().indexOf(value)!=-1) return true;
+            }
+            return false;
+        }
+
+        
+        function getTable() {
+
+            //Dont include the IP!!!!!!
+            $.getJSON(customizeURL(), function (data) {
+                var article = data["data"]["article"];
+                var result = ""; 
+                var query = ""
+                clearEmptyElements();
+                if (operator.length==0 && startDate==""&& endDate=="" && linkValue != "Advance Search"){
+                    document.getElementById("result").innerHTML="<p style='color:red'>Please complete at least one constrain</p>";
+                    return "";
+                }
+                //simple search
+                if (linkValue == "Advance Search") {
+
+                    if (keywords==""){
+                        return "";
+                    }
+                    document.getElementById("result").innerHTML ="";
+                    countSearch ++;
+                    result += "<p>This is your <strong><i>" + countSearch  + "</i></strong> time(s) of search<br></p>";
+                    var inputContent = keywords.split(" ");
+                    result += "<p>You searched for articles with the keywords <strong><i>" + inputContent + "</i></strong></p>";
+                    
+                    result += "<table class='table table-hover table-striped'>"
+                        + "<tr>"
+                        + "<th id='titleHeader'>Title</th>"
+                        + "<th id='authorHeader'>Author</th>"
+                        + "<th id='yearHeader'>Year</th>"
+                        + "<th id='rateHeader'>Rate</th>"
+                        + "<th id='doiHeader'>DOI</th>"
+                        + "</tr>"
+
+                    var simpleResult=[];
+
+                    for (let i =0;i<article.length;i++){
+                        
+                        for (let j =0;j<inputContent.length;j++){
+
+                            if (valueExists(article[i], inputContent[j])){
+                                simpleResult.push(article[i]);
+                            }                                                                    
+                        }
+                    }
+
+                    //get all unique elements
+                    var viewResult = simpleResult.filter((element,index,a)=>a.indexOf(element)==index);
+
+
+                    for (let i = 0; i < viewResult.length; i++) {
+
+                        result += `<tr onclick='openArticleModal(\"${viewResult[i]['_id']}\")'>`
+                            + "<td class='title'>" + viewResult[i]["title"] + "</td>"
+                            + "<td class='author'>" + viewResult[i]["author"] + "</td>"
+                            + "<td class='year'>" + viewResult[i]["year"] + "</td>"
+                            + "<td class='rate'>" + viewResult[i]["rating"] + "</td>"
+                            + "<td class='doi'>pending...</td>"
+                            + "<tr>"
+                        }
+
+                    result += "</table>";
+                    result += "<br>";
+                    result += "<br>";
+
+
+                    document.getElementById("result").insertAdjacentHTML('beforeend', result);
+                }
+
+                //advance search
+                else {
+                    countSearch++;
+                    result += "<p>This is your <strong><i>" + countSearch  + "</i></strong> time(s) of search<br></p>";
+                    //input validation
+                    if (parseInt(startDate) > parseInt(endDate)) {
+                        alert("start year cannot be bigger than end year");
+                        return "";
+                    }
+
+                    //if valid
+                    else {
+                        clearEmptyElements();
+                    }
+                    //get input constains in text format
+                    for (let i = 0; i < subject.length; i++) {
+                        query += subject[i] + " " + operator[i] + " " + inputs[i];
+                    }
+                    //show the search constrains
+                    result += "<p>You searched for articles from <strong><i>" + startDate + "</i></strong>-<strong><i>" + endDate + "</i></strong>";
+                    if (query.trim() == "")
+                        result += "</p>";
+                    else {
+                        result += " where <strong><i>" + query + "</i></strong></p>";
+                    }
+
+
+                    result += "<table class='table table-striped'>"
+                        + "<tr>"
+                        + "<th id='titleHeader'>Title</th>"
+                        + "<th id='authorHeader'>Author</th>"
+                        + "<th id='yearHeader'>Year</th>"
+                        + "<th id='rateHeader'>Rate</th>"
+                        + "<th id='doiHeader'>DOI</th>"
+                        + "</tr>"
+
+                    for (let i = 0; i < article.length; i++) {
+
+                        result += `<tr onclick='openArticleModal(\"${viewResult[i]['_id']}\")'>`
+                            + "<td class='title'>" + article[i]["title"] + "</td>"
+                            + "<td class='author'>" + article[i]["author"] + "</td>"
+                            + "<td class='year'>" + article[i]["year"] + "</td>"
+                            + "<td class='rate'>" + article[i]["rating"] + "</td>"
+                            + "<td class='doi'>pending...</td>"
+                            + "<tr>"
+                    }
+
+                    result += "</table>";
+                    result += "<br>";
+                    result += "<br>";
+
+                    //if no result
+                    if (article.length == 0) {
+                        document.getElementById("result").insertAdjacentHTML('beforeend', "<p style='color:red'>Sorry, no result</p>");
+                    }
+
+                    //populate the result in a table.
+                    else {
+                        document.getElementById("result").insertAdjacentHTML('beforeend', result);
+                    }
+
+                }
+                clearInputs();
+            })
+
+            
+
+        }//end of the function
+
+    function clearInputs(){
+        operator=[];
+        inputs=[];
+        subject=[];
+        url="";
+    }
+
+        function hide_show_table(checkboxID) {
+            
+            var checkboxValue = document.getElementById(checkboxID).value;
+            if (checkboxValue == "on") {
+                var tableColumn = document.getElementsByClassName(checkboxID);
+                for (var i = 0; i < tableColumn.length; i++) {
+                    tableColumn[i].style.display = "none";
+                }
+                
+                document.getElementById(checkboxID + "Header").style.display = "none";
+                document.getElementById(checkboxID).value = "hide";
+            }
+
+            else {
+                var tableColumn = document.getElementsByClassName(checkboxID);
+                for (var i = 0; i < tableColumn.length; i++) {
+                    tableColumn[i].style.display = "table-cell";
+                }
+                
+                document.getElementById(checkboxID + "Header").style.display = "table-cell";
+                document.getElementById(checkboxID).value = "on";
+            }
+
+        }
+
+        //View full article modal
+        function openArticleModal(articleId){
+            $.ajax({
+                url: 'api/v1/article/admin/' + articleId,
+                method: 'GET',
+                success: function(data){
+                    console.log(data);
+                    //Generate body string
+                    let article = data['data']['article'];
+
+                    //expand evidence items
+                    let evidenceHtmlString = "";
+                    article['evidence'].forEach(element => {
+                        evidenceHtmlString += `<p>
+                            <strong>Benefit: </strong>${element['benefit']} 
+                            <strong>Context: </strong>${element['context']} 
+                            <strong>Result: </strong>${element['result']} 
+                            <strong>Confidence Rating: </strong>${element['confidenceRating']} 
+                            <strong>Integrity: </strong>${element['integrity']} 
+                        </p>`;
+                    });
+                    let htmlString = `
+                        <h3>Research Design</h3>
+                        <p><strong>Question/Aim: </strong>${article['aim']}</p>
+                        <p><strong>Research Method: </strong>${article['method']}</p>
+                        <p><strong>Research Metrics: </strong>${article['metrics']}</p>
+                        <p><strong>Participants: </strong>${article['participants']}</p>
+                        <br>
+
+                        <h3>Se Method and Methodology</h3>
+                        <p><strong>Software Engineering Methods: </strong>${article['SEmethod']}</p>
+                        <p><strong>Software Engineering Methodologies: </strong>${article['SEmethodology']}</p>
+                        <br>
+
+                        <h3>Evidence</h3>
+                        ${evidenceHtmlString}
+                        <h3>Bibliographic Data</h3>
+                        <p>
+                            <strong>Title: </strong>${article['title']}
+                            <strong>Author: </strong>${article['author']}
+                            <strong>Year: </strong>${article['year']}
+                        </p>
+                        <p>
+                            <strong>Publisher: </strong>${article['publisher']}
+                            <strong>Publisher City: </strong>${article['publisher_city']}
+                        </p>
+                        <p>
+                            <strong>Journal: </strong>${article['journal']}
+                            <strong>Volume: </strong>${article['volume']}
+                            <strong>Issue: </strong>${article['issue']}
+                        </p>
+                        <p><strong>DOI: </strong>${article['doi']}</p>
+
+                        <br>
+                        <p><strong>Rating: </strong>${article['rating']} | ${article['rating_count']} votes</p>
+
+                    `;
+
+                    $('#articlaModalBody').html(htmlString);
+                    $('#articleModal').modal({});
+                }
+            })
+        }
+
+    </script>
+
+    <!-- full article display modal -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="articleModal" aria-labelledby="articleModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Article</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="articlaModalBody">
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap Datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 
 
