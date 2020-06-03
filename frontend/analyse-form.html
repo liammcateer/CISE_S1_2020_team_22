@@ -323,6 +323,7 @@
                         url: 'api/v1/article/moderator/' + articleId,
                         type: 'DELETE',
                     });
+                    location.reload();
                 },
                 error: function (data) {
                     alert("Error submitting article.");
