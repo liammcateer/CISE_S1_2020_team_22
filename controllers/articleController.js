@@ -219,6 +219,7 @@ exports.checkArticle = async(req, res) => {
       res.status(200).json({
         status: 'success',
         messahe: 'The article has rejectred',
+        reason: articles[0].rejectMessage,
         data: {
           article: articles,
         }
@@ -242,7 +243,7 @@ exports.checkArticle = async(req, res) => {
 //create new reject article
 exports.createReject = async(req, res) => {
   try{
-    const newArticle = await ModeratorArticles.findOneAndUpdate(req.params.title, {rejected: true, rejectMessage: req.body.rejectMessage}, {
+    const newArticle = await ModeratorArticles.findOneAndUpdate({title: req.body.title}, {rejected: true, rejectMessage: req.body.rejectMessage}, {
       new: true,
       runValidators: true,
     });

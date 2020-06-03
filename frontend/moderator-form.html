@@ -21,6 +21,13 @@
 <body onload="loadQueue()">
     <nav></nav>
     <h1>Moderate Articles</h1>
+    <div class="form-group"></div>
+        <label>Search for rejected articles</label>
+        <input type="text" id="rejectSearchInput" placeholder="">
+        <button type="button" class="btn btn-secondary" onclick="checkRejected()">Search</button>
+    </div>
+    <br>
+    <br>
     <table class="table table-striped">
         <thead class="thead-light">
             <tr>
@@ -54,7 +61,7 @@
                     <form id="reject-form">
                         <div class="form-group">
                             <label>Reason for rejecting</label>
-                            <input class="form-control" type="text" name="reject-message" required>
+                            <input class="form-control" type="text" name="rejectMessage" required>
                         </div>
                     </form>
                 </div>
@@ -115,7 +122,7 @@
                 }
             });
 
-            data = $('#reject-form').serialize() + article['title'];
+            data = $('#reject-form').serialize() + "&title=" + article['title'];
             console.log(data);
             $.ajax({
                 url: 'api/v1/article/moderator',
@@ -146,6 +153,21 @@
                 error: function (data) {
                     alert("Error accepting submission.");
                 }
+            });
+        }
+
+        function checkRejected(){
+            articleTitle = $('#rejectSearchInput').val();
+            $.ajax({
+               url: 'api/v1/article/moderator/'+articleTitle,
+               type: 'GET',
+               success: function(data){
+                   console.log(data);
+                   alert(data['messahe']+'\nReason: '+data['reason']);
+               },
+               error: function(data){
+                   alert('No Article found with that title');
+               } 
             });
         }
     </script>
