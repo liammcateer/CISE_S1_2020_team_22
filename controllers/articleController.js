@@ -242,7 +242,7 @@ exports.checkArticle = async(req, res) => {
 //create new reject article
 exports.createReject = async(req, res) => {
   try{
-    const newArticle = await ModeratorArticles.findOneAndUpdate(req.params.title, {rejected: true}, {
+    const newArticle = await ModeratorArticles.findOneAndUpdate(req.params.title, {rejected: true, rejectMessage: req.body.rejectMessage}, {
       new: true,
       runValidators: true,
     });
@@ -264,7 +264,7 @@ exports.createReject = async(req, res) => {
 //delete invalid article from moderator/analyst queue, this method might be also used by analyst
 exports.deleteInvalidArticle = async (req, res) => {
   try{
-    await ModeratorArticles.findOneAndDelete(req.params.id);
+    await ModeratorArticles.findOneAndDelete({_id: req.params.id});
 
     res.status(200).json({
       status: 'success',
