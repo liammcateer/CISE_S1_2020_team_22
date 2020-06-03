@@ -3,15 +3,12 @@
 
 <head>
 
-    <!-- import bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
     <!-- import Jquery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script>
         $(function () {
             $('nav').load('/nav.html');
@@ -43,6 +40,13 @@
 
         /* align the button to the search input */
         #mainButton {
+            position: relative;
+            bottom: 2px;
+            padding: 12px;
+
+        }
+
+        #clear {
             position: relative;
             bottom: 2px;
             padding: 12px;
@@ -102,16 +106,10 @@
 </head>
 
 <body>
-    <!-- Navigation bar -->
-    <nav></nav>
-
+    <nav>
+    </nav>
     <!-- search field -->
     <div id="searchinput" class="container" style="margin-top:80px">
-
-        <!-- We could put our logo here -->
-        <div>
-            <!-- <img src="background.jpg" width:100 height:100 alt="log"/> -->
-        </div>
 
         <form id="mainsearchform">
 
@@ -122,6 +120,8 @@
             <!-- change the submit type to button, otherwise will keep refreshing the page -->
             <input id="mainButton" class="btn btn-primary" type="submit" name="Search" value="Search"
                 onclick="getResult()" />
+            <input id="clear" class="btn btn-warning" type="button" name="clear" value="Clear"
+                />
         </form>
 
         <!-- sort options -->
@@ -143,10 +143,9 @@
             </div>
         </div>
 
-        <a id="link" href="#">Advance search</a>
+        <a id="link" href="#">Advance Search</a>
         <br>
         <br>
-
 
 
 
@@ -197,20 +196,15 @@
                                 <option selected value="">Name of Field</option>
                                 <option value="author">Author</option>
                                 <option value="title">Article title</option>
-                                <option value="doi">Article source</option>
-                                <option value="benefit">Benefit</option>
-                                <option value="method">Method</option>
-                                <option value="participants">Participants</option>
+
                             </select>
                         </div>
 
                         <div class="col-sm-3">
                             <select class="custom-select operator" required>
                                 <option selected value="">Operator</option>
-                                <option value="contain">Contains</option>
-                                <option value="notinclude">Does Not Contain</option>
-                                <option value="begin">Begins with</option>
-                                <option value="end">Ends With</option>
+                                <option value="contains">Contains</option>
+                                <option value="doesntContain">Does Not Contain</option>
                             </select>
                         </div>
 
@@ -218,13 +212,12 @@
                             <input class="inputvalueclass" id="inputvalue" type="text" placeholder="value" required />
                         </div>
 
-                        <div class="col-sm-1 btn-group">
+                        <div class="col-sm-0.5 btn-group">
                             <input class="btn btn-success addButton" type="button" value="+" id="add">
                         </div>
                     </div><!-- end of row -->
                 </div>
             </div>
-
         </form>
 
 
@@ -251,6 +244,55 @@
             });
 
 
+            var table = $('table');
+    
+             $('#titleHeader, #authorHeader, #yearHeader, #rateHeader, #doiHeader')
+                .wrapInner('<span title="sort this column"/>')
+                .each(function(){
+            
+            var th = $(this),
+                thIndex = th.index(),
+                inverse = false;
+            
+            th.click(function(){
+                
+                table.find('td').filter(function(){
+                    
+                    return $(this).index() === thIndex;
+                    
+                }).sortElements(function(a, b){
+                    
+                    if ($.text([a]) > $.text([b])){
+                        if (inverse){
+                            return -1;
+                        }
+                        else{
+                            return 1;
+                        }
+                    }
+                    else{
+                        if (inverse){
+                            return 1;
+                        }
+                        else{
+                            return -1;
+                        }
+
+                    }                   
+                }, function(){
+                    
+                    // parentNode is the element we want to move
+                    return this.parentNode; 
+                    
+                });
+                
+                inverse = !inverse;
+                    
+            });
+                
+        });
+
+
             //change the word of the link, switch between "simple search" and "advance search".
             let count = 0;
             $("#link").click(function () {
@@ -269,6 +311,10 @@
                 $("#details").slideToggle();
 
             });
+
+            $("#clear").click(function (){
+               document.getElementById("result").innerHTML="<p></p>";
+            })
 
             //will only fetch year from the calender
             $("#startdate").datepicker({
@@ -299,20 +345,14 @@
                 + ' <select class="custom-select subject" >'
                 + ' <option selected value="">Name of Field</option>'
                 + ' <option value="author">Author</option>'
-                + ' <option value="article">Article title</option>'
-                + ' <option value="source">Article source</option>'
-                + '<option value="benefit">Benefit</option>'
-                + '<option value="method">Method</option>'
-                + '<option value="participants">Participants</option>'
+                + ' <option value="title">Article title</option>'
                 + '  </select>'
                 + ' </div>'
                 + ' <div class="col-sm-3">'
                 + ' <select class="custom-select operator">'
                 + '<option selected value="">Operator</option>'
-                + '<option value="c">Contains</option>'
-                + '<option value="d">Does Not Contain</option>'
-                + '<option value="b">Begins with</option>'
-                + '<option value="e">Ends With</option>'
+                + '<option value="contains">Contains</option>'
+                + '<option value="doesntContain">Does Not Contain</option>'
                 + ' </select>'
                 + ' </div>'
                 + '<div class="col-sm-3">'
@@ -335,9 +375,6 @@
             $(document).on('click', '.deleteButton', function (e) {
                 removeCurrent($(this))
             });
-
-
-
         })
 
         /* global variables below
@@ -354,10 +391,9 @@
         var allValueInputs;
         var inputs = [];
         var url;
-        var count = 0;
+        var countSearch = 0;
         var searchTotal = "";
         var sortCriterial = "";
-
         /* global variables above
        ---------------------------------------------------------------------------------------------
        */
@@ -372,6 +408,7 @@
                 };
             }
         }
+
         //remove the condition filter.
         function removeCurrent(thisObj) {
             thisObj.parent().parent().parent().remove();
@@ -413,30 +450,83 @@
         }
 
         function customizeURL() {
-
-            //if use the simple search
-            if (linkValue == "Advance search") {
-                return url = "/api/v1/article";
-            }
+            let yearFont;
+            let conditionFront;
+            //clear url;
+            url="";
 
             getSortConditions();
             url = "/api/v1/article?";
+            
+            if (sortCriterial != "") {
+                url += "sort=" + sortCriterial;
+            }
 
+            //if use the simple search, just need to include sort
+            if (linkValue == "Advance Search") {
+                return url;
+            }
+
+            if (sortCriterial ==""){
+                yearFont = "year";
+            }
+            else{
+                yearFont = "&year";
+            }
             if (startDate != "") {
-                url += "year[gte]=" + startDate;
+                url += yearFont+"[gte]=" + startDate.trim();
             }
 
             if (endDate != "") {
-                url += "&year[lte]=" + endDate;
+                url += yearFont+"[lte]=" + endDate.trim();
             }
 
-            if (sortCriterial != "") {
-                url += "&sort=" + sortCriterial;
+            //get rid of all empty constrains
+            clearEmptyElements();
+
+            if (sortCriterial ==""&&endDate==""&&startDate==""){
+                conditionFront = "";
             }
+            else{
+                conditionFront = "&";
+            }
+
+                for (let i = 0; i < operator.length; i++) {
+
+                    if (i==0){
+                       
+                        if (operator[i] == "contains") {
+                            url += conditionFront+subject[i] + "[regex]=" + inputs[i];
+                        }
+                        else {
+                            url += conditionFront+subject[i] + "![regex]=" + inputs[i];
+                        }
+
+                    }
+
+                    else{
+                        if (operator[i] == "contains") {
+                            url +="&"+subject[i] + "[regex]=" + inputs[i];
+                        }
+                        else {
+                            url +="&"+subject[i] + "![regex]=" + inputs[i];
+                        }
+                    }
+
+                }
+            
+
+
             return url;
         }
 
+        // function toUpper(input) {
+        //     return input.charAt(0).toUpperCase() + input.slice(1);
+        // }
 
+        // function toLower(input) {
+        //     return input.charAt(0).toLowerCase() + input.slice(1);
+        // }
 
         //Search button on click function
         function getResult() {
@@ -447,111 +537,191 @@
             getTable();
         }
 
+        function clearEmptyElements() {
+            //remove empty element in the related array  
+            subject.map(e => {
+                if (e == "") {
+                    operator.splice(subject.indexOf(e), 1);
+                    inputs.splice(subject.indexOf(e), 1);
+                }
+            })
+            subject = subject.filter(e => {
+                return e != "";
+            })
+
+            operator.map(e => {
+                if (e == "") {
+                    subject.splice(operator.indexOf(e), 1);
+                    inputs.splice(operator.indexOf(e), 1);
+                }
+            })
+            operator = operator.filter(e => {
+                return e != "";
+            })
+            inputs.map(e => {
+                if (e == "") {
+                    operator.splice(inputs.indexOf(e), 1);
+                    subject.splice(inputs.indexOf(e), 1);
+                }
+            })
+            inputs = inputs.filter(e => {
+                return e != "";
+            })
+        }
+        
+        //function to check if a json file includes duplicate values.
+        function valueExists(jsObj, value){
+            for (var key in jsObj){
+
+                if (jsObj[key].toString().indexOf(value)!=-1) return true;
+            }
+            return false;
+        }
+
+        
         function getTable() {
 
             //Dont include the IP!!!!!!
             $.getJSON(customizeURL(), function (data) {
                 var article = data["data"]["article"];
-                var result = "";
-                count++;
+                var result = ""; 
                 var query = ""
-
+                clearEmptyElements();
+                if (operator.length==0 && startDate==""&& endDate=="" && linkValue != "Advance Search"){
+                    document.getElementById("result").innerHTML="<p style='color:red'>Please complete at least one constrain</p>";
+                    return "";
+                }
                 //simple search
-                if (linkValue == "Advance search") {
-                    document.getElementById("result").insertAdjacentHTML('beforeend',keywords);
+                if (linkValue == "Advance Search") {
+
+                    if (keywords==""){
+                        return "";
+                    }
+                    document.getElementById("result").innerHTML ="";
+                    countSearch ++;
+                    result += "<p>This is your <strong><i>" + countSearch  + "</i></strong> time(s) of search<br></p>";
+                    var inputContent = keywords.split(" ");
+                    result += "<p>You searched for articles with the keywords <strong><i>" + inputContent + "</i></strong></p>";
+                    
+                    result += "<table class='table table-striped'>"
+                        + "<tr>"
+                        + "<th id='titleHeader'>Title</th>"
+                        + "<th id='authorHeader'>Author</th>"
+                        + "<th id='yearHeader'>Year</th>"
+                        + "<th id='rateHeader'>Rate</th>"
+                        + "<th id='doiHeader'>DOI</th>"
+                        + "</tr>"
+
+                    var simpleResult=[];
+
+                    for (let i =0;i<article.length;i++){
+                        
+                        for (let j =0;j<inputContent.length;j++){
+
+                            if (valueExists(article[i], inputContent[j])){
+                                simpleResult.push(article[i]);
+                            }                                                                    
+                        }
+                    }
+
+                    //get all unique elements
+                    var viewResult = simpleResult.filter((element,index,a)=>a.indexOf(element)==index);
+
+
+                    for (let i = 0; i < viewResult.length; i++) {
+
+                        result += "<tr>"
+                            + "<td>" + viewResult[i]["title"] + "</td>"
+                            + "<td>" + viewResult[i]["author"] + "</td>"
+                            + "<td>" + viewResult[i]["year"] + "</td>"
+                            + "<td>" + viewResult[i]["rating"] + "</td>"
+                            + "<td>pending...</td>"
+                            + "<tr>"
+                        }
+
+                    result += "</table>";
+                    result += "<br>";
+                    result += "<br>";
+
+
+                    document.getElementById("result").insertAdjacentHTML('beforeend', result);
                 }
 
                 //advance search
                 else {
-
+                    countSearch++;
+                    result += "<p>This is your <strong><i>" + countSearch  + "</i></strong> time(s) of search<br></p>";
                     //input validation
                     if (parseInt(startDate) > parseInt(endDate)) {
                         alert("start year cannot be bigger than end year");
+                        return "";
                     }
 
                     //if valid
                     else {
-
-                        //remove empty element in the related array  
-                        subject.map(e => {
-
-                            if (e == "") {
-                                operator.splice(subject.indexOf(e), 1);
-                                inputs.splice(subject.indexOf(e), 1);
-                            }
-                        })
-                        subject = subject.filter(e => {
-                            return e != "";
-                        })
-
-                        operator.map(e => {
-                            if (e == "") {
-                                subject.splice(operator.indexOf(e), 1);
-                                inputs.splice(operator.indexOf(e), 1);
-                            }
-                        })
-                        operator = operator.filter(e => {
-                            return e != "";
-                        })
-
-
-                        inputs.map(e => {
-                            if (e == "") {
-                                operator.splice(inputs.indexOf(e), 1);
-                                subject.splice(inputs.indexOf(e), 1);
-                            }
-                        })
-                        inputs = inputs.filter(e => {
-                            return e != "";
-                        })
-
+                        clearEmptyElements();
                     }
-                
+                    //get input constains in text format
+                    for (let i = 0; i < subject.length; i++) {
+                        query += subject[i] + " " + operator[i] + " " + inputs[i];
+                    }
+                    //show the search constrains
+                    result += "<p>You searched for articles from <strong><i>" + startDate + "</i></strong>-<strong><i>" + endDate + "</i></strong>";
+                    if (query.trim() == "")
+                        result += "</p>";
+                    else {
+                        result += " where <strong><i>" + query + "</i></strong></p>";
+                    }
 
-                for (let i = 0; i < subject.length; i++) {
-                    query += subject[i] + " " + operator[i] + " " + inputs[i];
-                }
-                result += "<p>This is your <strong><i>" + count + "</i></strong> time(s) of search<br>";
-                result += "You searched for aticles from " + startDate + " to" + endDate + " where " + query + "</p>";
-                result += "<table class='table table-striped'>"
-                    + "<tr>"
-                    + "<th>Title</th>"
-                    + "<th>Author</th>"
-                    + "<th>Year</th>"
-                    + "<th>Rate</th>"
-                    + "<th>DOI</th>"
-                    + "</tr>"
 
-                for (let i = 0; i < article.length; i++) {
-
-                    result += "<tr>"
-                        + "<td>" + article[i]["title"] + "</td>"
-                        + "<td>" + article[i]["author"] + "</td>"
-                        + "<td>" + article[i]["year"] + "</td>"
-                        + "<td>pending...</td>"
-                        + "<td>pending...</td>"
+                    result += "<table class='table table-striped'>"
                         + "<tr>"
+                        + "<th id='titleHeader'>Title</th>"
+                        + "<th id='authorHeader'>Author</th>"
+                        + "<th id='yearHeader'>Year</th>"
+                        + "<th id='rateHeader'>Rate</th>"
+                        + "<th id='doiHeader'>DOI</th>"
+                        + "</tr>"
+
+                    for (let i = 0; i < article.length; i++) {
+
+                        result += "<tr>"
+                            + "<td>" + article[i]["title"] + "</td>"
+                            + "<td>" + article[i]["author"] + "</td>"
+                            + "<td>" + article[i]["year"] + "</td>"
+                            + "<td>" + article[i]["rating"] + "</td>"
+                            + "<td>pending...</td>"
+                            + "<tr>"
+                    }
+
+                    result += "</table>";
+                    result += "<br>";
+                    result += "<br>";
+
+                    //if no result
+                    if (article.length == 0) {
+                        document.getElementById("result").insertAdjacentHTML('beforeend', "<p style='color:red'>Sorry, no result</p>");
+                    }
+
+                    //populate the result in a table.
+                    else {
+                        document.getElementById("result").insertAdjacentHTML('beforeend', result);
+                    }
 
                 }
-
-                result += "</table>";
-                result += "<br>";
-                result += "<br>";
-
-                //if no result
-                if (article.length == 0) {
-                    document.getElementById("result").insertAdjacentHTML('beforeend', "<p style='color:red'>Sorry, no result</p>");
-                }
-
-                //populate the result in a table.
-                else {
-                    document.getElementById("result").insertAdjacentHTML('beforeend', result);
-                }
-
-            }
+                clearInputs();
             })
 
+            
+
         }//end of the function
+
+    function clearInputs(){
+        operator=[];
+        inputs=[];
+        subject=[];
+        url="";
+    }
     </script>
 
     <!-- Include Bootstrap Datepicker -->
