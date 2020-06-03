@@ -124,16 +124,7 @@
                 success: function (data) {
                     console.log(data);
                     alert("Submission rejected successfully.");
-
-                    //remove article from queue
-                    $.ajax({
-                        url: 'api/v1/article/moderator/' + article['_id'],
-                        type: 'DELETE',
-                        success: function(data) {
-                            console.log(data);
-                            location.reload();
-                        }
-                    });
+                    location.reload();
                 },
                 error: function (data) {
                     alert("Error Rejecting submission.");
