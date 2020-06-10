@@ -33,10 +33,7 @@
         background: #3e3d3d;
         padding: 40px 20px;
         box-sizing: border-box;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        margin: auto;
     }
 
     h1 {
@@ -91,6 +88,9 @@
             <input type="text" required name="doi" id="article-DOI" placeholder="DOI">
             <input type="text" required name="pages" id="article-pages" placeholder="Pages">
             <input type="textarea" required name="detail" id="article-detail" placeholder="Message">
+            <p>Keep me updated?</p>
+            <input type="email" name="email" id="article-email" placeholder="Email">
+            <input type="text" required name="name" id="article-name" placeholder="Name">
             <input type="submit" value="Submit">
 
         </form>
