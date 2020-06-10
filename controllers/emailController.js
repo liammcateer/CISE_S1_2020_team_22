@@ -42,8 +42,6 @@ const sendEmail = async function (article, status) {
         text: textContent,
         html: htmlContent
     });
-
-    console.log(info);
 }
 
 module.exports.sendEmail = sendEmail;
