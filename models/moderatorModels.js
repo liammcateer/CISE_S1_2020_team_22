@@ -70,6 +70,12 @@ const moderatorSchema = new mongoose.Schema({
     ],
     default: false, //false = in moderation, true = in analysis
   },
+  email: {
+    type: String
+  },
+  name: {
+    type: String
+  },
   date: {
     type: Date,
     default: Date.now(),

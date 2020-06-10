@@ -4,6 +4,7 @@
 const Article = require('../models/articleModels');
 const ModeratorArticles = require('../models/moderatorModels')
 const Reject = require('../models/rejectedModels');
+const emailController = require('./emailController');
 
 /*
 Method for Normal User
@@ -63,6 +64,12 @@ exports.searchArticle = async (req, res) => {
 exports.submitNewArticle = async (req, res) => {
   try{
     const newArticle = await ModeratorArticles.create(req.body);
+
+    try{
+      emailController.sendEmail(newArticle, emailController.statuses.RECIEVED);
+    }catch(err1){
+      console.log(err1)
+    }
 
     res.status(200).json({
       status: 'success',
@@ -248,6 +255,12 @@ exports.createReject = async(req, res) => {
       runValidators: true,
     });
 
+    try{
+      emailController.sendEmail(newArticle, emailController.statuses.REJECTED);
+    }catch(err1){
+      console.log(err1)
+    }
+
     res.status(200).json({
       status: 'success',
       data: {
@@ -265,7 +278,13 @@ exports.createReject = async(req, res) => {
 //delete invalid article from moderator/analyst queue, this method might be also used by analyst
 exports.deleteInvalidArticle = async (req, res) => {
   try{
-    await ModeratorArticles.findOneAndDelete({_id: req.params.id});
+    const article = await ModeratorArticles.findOneAndDelete({_id: req.params.id});
+
+    try{
+      emailController.sendEmail(article, emailController.statuses.ACCEPTED);
+    }catch(err1){
+      console.log(err1)
+    }
 
     res.status(200).json({
       status: 'success',

@@ -1,12 +1,15 @@
 "use strict";
 const nodemailer = require("nodemailer");
+const dotenv = require('dotenv');
+dotenv.config({ path: 'config.env' });
 
 const statuses = {
+    RECIEVED: "Recieved",
     ACCEPTED: 'Accepted',
     REJECTED: 'Rejected'
 }
 
-const sendEmail = async function (recipientEmailAddress, name, status, reason = "") {
+const sendEmail = async function (article, status) {
     var transport = nodemailer.createTransport({
         host: "smtp.mailtrap.io",
         port: 2525,
@@ -16,30 +19,32 @@ const sendEmail = async function (recipientEmailAddress, name, status, reason = 
         }
     });
 
-    textContent = `
-        Hello ${name},\n\n
+    let textContent = `
+        Hello ${article.name},
 
-        The status of your article submission has been updated.\n\n
+        The status of your article '${article.title}' submission has been updated.
 
-        Your submission was: ${status}.\n\n
+        Your submission was ${status}.
 
-        ${status != statuses.ACCEPTED ? "Reason: " + reason: ""}\n\n
+        ${article.rejected ? "Reason: " + article.rejectMessage: ""}
 
         Regards
         SEER Moderation team
     `;
 
-    htmlContent = textContent.replace(/\n/g, "<br />");
+    let htmlContent = textContent.replace(/\n/g, "<br />");
 
     // send mail with defined transport object
     let info = await transport.sendMail({
         from: '"SEER moderation team" <moderation@seer.com>', // sender address
-        to: recipientEmailAddress, // list of receivers
+        to: article.email, // list of receivers
         subject: "Article submission Status", // Subject line
         text: textContent,
         html: htmlContent
     });
+
+    console.log(info);
 }
 
-exports.statuses;
-exports.sendEmail;
+module.exports.sendEmail = sendEmail;
+module.exports.statuses = statuses;
