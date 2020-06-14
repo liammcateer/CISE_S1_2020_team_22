@@ -224,6 +224,8 @@
                                 <option selected value="">Name of Field</option>
                                 <option value="author">Author</option>
                                 <option value="title">Article title</option>
+                                <option value="SEmethod">SE Method</option>
+                                <option value="SEmethodology">SE Methodology</option>
 
                             </select>
                         </div>
@@ -232,7 +234,7 @@
                             <select class="custom-select operator" required>
                                 <option selected value="">Operator</option>
                                 <option value="contains">Contains</option>
-                                <option value="doesntContain">Does Not Contain</option>
+                                <!-- <option value="doesntContain">Does Not Contain</option> -->
                             </select>
                         </div>
 
@@ -355,6 +357,12 @@
 
             });
 
+
+            $(document).on('click', '#authorHeader', function (e) {
+                sortTable(1,"des");
+            });
+
+
             $("#clear").click(function (){
                document.getElementById("result").innerHTML="<p></p>";
             })
@@ -389,23 +397,24 @@
                 + ' <option selected value="">Name of Field</option>'
                 + ' <option value="author">Author</option>'
                 + ' <option value="title">Article title</option>'
-                + '  </select>'
+                + ' <option value="SEmethod">SE Method</option>'
+                + ' <option value="SEmethodology">SE Methodology</option>'
+                + ' </select>'
                 + ' </div>'
                 + ' <div class="col-sm-3">'
                 + ' <select class="custom-select operator">'
-                + '<option selected value="">Operator</option>'
-                + '<option value="contains">Contains</option>'
-                + '<option value="doesntContain">Does Not Contain</option>'
+                + ' <option selected value="">Operator</option>'
+                + ' <option value="contains">Contains</option>'
                 + ' </select>'
                 + ' </div>'
-                + '<div class="col-sm-3">'
+                + ' <div class="col-sm-3">'
                 + ' <input type="text" id="inputvalue" placeholder="value" class="inputvalueclass">'
-                + '</div>'
-                + '<div class="col-sm-1 btn-group">'
-                + '<input class="btn btn-success addButton" type="button" value="+" id="add">'
-                + '<input class="btn btn-danger deleteButton" type="button" value="-" id="delete">'
-                + '</div>'
-                + '</div><!-- end of row -->'
+                + ' </div>'
+                + ' <div class="col-sm-1 btn-group">'
+                + ' <input class="btn btn-success addButton" type="button" value="+" id="add">'
+                + ' <input class="btn btn-danger deleteButton" type="button" value="-" id="delete">'
+                + ' </div>'
+                + ' </div><!-- end of row -->'
                 + '</div>';
 
             //apend new constains everytime click on add       
@@ -545,19 +554,18 @@
                         if (operator[i] == "contains") {
                             url += conditionFront+subject[i] + "[regex]=" + inputs[i];
                         }
-                        else {
-                            url += conditionFront+subject[i] + "[regex]!=" + inputs[i];
-                        }
-
+                        // else {
+                        //     url += conditionFront+subject[i] + "[regex]!=" + inputs[i];
+                        // }
                     }
 
                     else{
                         if (operator[i] == "contains") {
                             url +="&"+subject[i] + "[regex]=" + inputs[i];
                         }
-                        else {
-                            url +="&"+subject[i] + "[regex]!=" + inputs[i];
-                        }
+                        // else {
+                        //     url +="&"+subject[i] + "[regex]!=" + inputs[i];
+                        // }
                     }
 
                 }
@@ -625,7 +633,7 @@
             return false;
         }
 
-        
+
         function getTable() {
 
             //Dont include the IP!!!!!!
@@ -650,7 +658,7 @@
                     var inputContent = keywords.split(" ");
                     result += "<p>You searched for articles with the keywords <strong><i>" + inputContent + "</i></strong></p>";
                     
-                    result += "<table class='table table-hover table-striped'>"
+                    result += "<table id='data' class='table table-hover table-striped'>"
                         + "<tr>"
                         + "<th id='titleHeader'>Title</th>"
                         + "<th id='authorHeader'>Author</th>"
